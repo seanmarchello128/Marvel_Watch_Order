@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
+<title>Avengers Watch Order</title>
+<style>
+  :root{
+    --bg: #08080c;
+    --panel: #121218;
+    --ink: #f5f3ec;
+    --ink-dim: #a9a6b8;
+    --line: #26262f;
+  }
+  *{box-sizing:border-box;}
+  html,body{ margin:0; background:var(--bg); }
+  body{ -webkit-tap-highlight-color: transparent; }
+  #mc-root{
+    background:var(--bg);
+    color:var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 26px 16px 56px;
+    border-radius: 14px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  .mc-hero{ text-align:center; padding: 6px 8px 20px; }
+  .mc-hero h1{
+    font-size: 26px;
+    margin: 0;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    color: var(--ink);
+  }
+
+  .mc-ring-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin: 18px 0 22px;
+    padding: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    flex-wrap: wrap;
+  }
+  .mc-ring{ position:relative; width:56px; height:56px; flex:none; }
+  .mc-ring svg{ transform: rotate(-90deg); }
+  .mc-ring circle{ fill:none; stroke-width: 6; }
+  .mc-ring .mc-ring-bg{ stroke:#26262f; }
+  .mc-ring .mc-ring-fg{ stroke: url(#mc-grad); stroke-linecap: round; transition: stroke-dashoffset .35s ease; }
+  .mc-ring-label{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size: 11px; font-weight:800; color: var(--ink);
+  }
+  .mc-ring-text{ font-size: 13px; color: var(--ink-dim); text-align:center; }
+  .mc-ring-text b{ color: var(--ink); font-size: 15px; }
+
+  .mc-panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+
+  .mc-search{ position: relative; margin-bottom: 12px; }
+  .mc-search svg{
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:15px; height:15px; opacity:0.5; pointer-events:none;
+  }
+  .mc-search input{
+    width:100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 16px;
+    padding: 11px 34px 11px 34px;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  .mc-search input::placeholder{ color: #6f6c7c; }
+  .mc-search input:focus{ border-color: var(--ink-dim); }
+  .mc-search-clear{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    width:22px; height:22px; border:none; background:transparent;
+    color: var(--ink-dim); font-size:16px; line-height:1; cursor:pointer;
+    display:none; align-items:center; justify-content:center; border-radius:50%;
+  }
+  .mc-search-clear:hover{ color: var(--ink); background: rgba(255,255,255,0.08); }
+  .mc-search-clear.show{ display:flex; }
+
+  .mc-controls-row{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .mc-control{ flex: 1; min-width: 150px; }
+  .mc-control label{
+    display:block; color: var(--ink-dim); font-size: 10.5px; font-weight:800;
+    text-transform: uppercase; letter-spacing:0.4px; margin-bottom: 5px;
+  }
+  .mc-control select{
+    width:100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 10px;
+    border-radius: 9px;
+    cursor: pointer;
+  }
+
+  .mc-filters{
+    display:flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .mc-chip{
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .mc-chip.active{ background: var(--ink); color:#0c0c10; border-color: var(--ink); }
+  .mc-chip:hover:not(.active){ border-color: var(--ink-dim); color: var(--ink); }
+
+  .mc-result-count{
+    color: var(--ink-dim); font-size: 11.5px; margin: 2px 2px 12px;
+  }
+  .mc-empty{
+    text-align:center; color: var(--ink-dim); font-size: 13px;
+    padding: 30px 10px; border: 1px dashed var(--line); border-radius: 12px;
+  }
+
+  .mc-list{ display:flex; flex-direction:column; gap: 10px; }
+
+  .mc-item{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+    transition: opacity .2s ease, transform .15s ease;
+  }
+  .mc-item.hidden{ display:none; }
+  .mc-item::before{
+    content:"";
+    position:absolute; inset:0;
+    background: var(--item-bg);
+    opacity: 0.9;
+    z-index:0;
+  }
+  .mc-item::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%);
+    z-index:0;
+  }
+  .mc-item.done{ opacity: 0.42; }
+
+  .mc-check-btn{
+    position:relative; z-index:1;
+    width: 30px; height:30px;
+    flex: none;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.75);
+    background: rgba(0,0,0,0.15);
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    padding:0;
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .15s ease;
+  }
+  .mc-check-btn.checked{
+    background: #fff;
+    transform: scale(1.12);
+  }
+  .mc-check-btn.checked::after{
+    content:"✓";
+    font-size: 15px;
+    font-weight: 900;
+    color: #111;
+  }
+
+  .mc-item-body{ position:relative; z-index:1; flex: 1; min-width:0; }
+  .mc-item-title-row{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .mc-item-title{
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .mc-item.done .mc-item-title{ text-decoration: line-through; }
+  a.mc-item-title{ text-decoration: none; cursor: pointer; }
+  a.mc-item-title:hover, a.mc-item-title:focus{ text-decoration: underline; }
+  .mc-item.done a.mc-item-title{ text-decoration: line-through; }
+  .mc-item-meta{
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .mc-item-note{
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .mc-badge{
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.4px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mc-badge.nonmcu{ background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.5); }
+  .mc-badge.tvseries{ background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.55); }
+  .mc-badge.upcoming{ background: rgba(255,255,255,0.92); color: #111; }
+  .mc-badge.cameo{ background: rgba(0,0,0,0.4); color: #fff; border: 1px dashed rgba(255,255,255,0.6); }
+
+  .mc-reset{
+    display:block;
+    margin: 16px auto 0;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .mc-reset:hover{ border-color: var(--ink-dim); color: var(--ink); }
+
+  @keyframes mc-pop{
+    0%{ transform: scale(1); }
+    40%{ transform: scale(0.97); }
+    100%{ transform: scale(1); }
+  }
+  .mc-item.just-checked{ animation: mc-pop .3s ease; }
+
+  @media (max-width: 420px){
+    #mc-root{ padding: 18px 10px 40px; }
+    .mc-hero h1{ font-size: 21px; }
+    .mc-item{ padding: 11px 12px; gap: 10px; }
+    .mc-item-title{ font-size: 13.5px; }
+    .mc-item-meta{ font-size: 10.5px; }
+    .mc-item-note{ font-size: 10px; }
+    .mc-ring-wrap{ gap:10px; padding:12px; }
+    .mc-panel{ padding: 12px; }
+    .mc-control{ min-width: 100%; }
+    .mc-chip{ padding: 7px 12px; }
+    .mc-badge{ font-size: 8.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="mc-root">
+  <div class="mc-hero">
+    <h1>Avengers Watch Order</h1>
+  </div>
+
+  <div class="mc-ring-wrap">
+    <div class="mc-ring">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <defs>
+          <linearGradient id="mc-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff5f5f"/>
+            <stop offset="50%" stop-color="#ffd23f"/>
+            <stop offset="100%" stop-color="#6fb3ff"/>
+          </linearGradient>
+        </defs>
+        <circle class="mc-ring-bg" cx="28" cy="28" r="23"></circle>
+        <circle class="mc-ring-fg" id="mc-ring-fg" cx="28" cy="28" r="23" stroke-dasharray="144.5" stroke-dashoffset="144.5"></circle>
+      </svg>
+      <div class="mc-ring-label" id="mc-ring-pct">0%</div>
+    </div>
+    <div class="mc-ring-text">Progress: <b id="mc-count-text">0/0</b> udah ditonton</div>
+  </div>
+
+  <div class="mc-panel">
+    <div class="mc-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="mc-search-input" placeholder="Cari judul film atau serial..." autocomplete="off">
+      <button class="mc-search-clear" id="mc-search-clear" aria-label="Hapus pencarian">×</button>
+    </div>
+
+    <div class="mc-controls-row">
+      <div class="mc-control">
+        <label for="mc-sort">Urutkan</label>
+        <select id="mc-sort">
+          <option value="default">Urutan rilis</option>
+          <option value="az">Judul (A-Z)</option>
+          <option value="year-desc">Tahun (baru-lama)</option>
+          <option value="year-asc">Tahun (lama-baru)</option>
+          <option value="rating">Rating (tertinggi)</option>
+        </select>
+      </div>
+      <div class="mc-control">
+        <label for="mc-hero-select">Hero</label>
+        <select id="mc-hero-select">
+          <option value="all">Semua Hero</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mc-filters">
+      <button class="mc-chip active" data-filter="all">Semua</button>
+      <button class="mc-chip" data-filter="mcu">MCU</button>
+      <button class="mc-chip" data-filter="nonmcu">Non MCU</button>
+      <button class="mc-chip" data-filter="tvseries">TV Series</button>
+    </div>
+  </div>
+
+  <div class="mc-result-count" id="mc-result-count"></div>
+
+  <div class="mc-list" id="mc-list"></div>
+  <div class="mc-empty" id="mc-empty" style="display:none;">Gak ada judul yang cocok. Coba kata kunci atau filter lain.</div>
+
+  <button class="mc-reset" id="mc-reset-btn">Reset semua centang</button>
+</div>
+
+<script>
+(function(){
+
+  const THEMES = {
+    spiderman:      "linear-gradient(135deg,#7f1d1d,#b91c1c 45%,#1d4ed8 100%)",
+    ironman:        "linear-gradient(135deg,#7f1d1d,#b91c1c 45%,#c9a227 100%)",
+    hulk:           "linear-gradient(135deg,#052e1c,#166534 50%,#4ade80 100%)",
+    thor:           "linear-gradient(135deg,#1e2a5e,#2b4fa8 50%,#d4af37 100%)",
+    cap:            "linear-gradient(135deg,#0b2447,#19376d 50%,#c1121f 100%)",
+    avengers:       "linear-gradient(135deg,#1a1a2e,#3b3b58 50%,#9aa5b1 100%)",
+    gotg:           "linear-gradient(135deg,#7c2d12,#c2410c 50%,#14b8a6 100%)",
+    antman:         "linear-gradient(135deg,#450a0a,#991b1b 50%,#c0c0c0 100%)",
+    strange:        "linear-gradient(135deg,#3b0764,#7f1d1d 50%,#d4af37 100%)",
+    panther:        "linear-gradient(135deg,#1a0b2e,#3b0764 50%,#a855f7 100%)",
+    marvel:         "linear-gradient(135deg,#0b1f3a,#1d4ed8 50%,#facc15 100%)",
+    widow:          "linear-gradient(135deg,#0a0a0a,#3f0d0d 50%,#b91c1c 100%)",
+    shangchi:       "linear-gradient(135deg,#3f0d0d,#b91c1c 50%,#d4af37 100%)",
+    eternals:       "linear-gradient(135deg,#3b2f0a,#8a6d1d 50%,#f5d67e 100%)",
+    deadpool:       "linear-gradient(135deg,#3f0d12,#7f1d2b 50%,#facc15 100%)",
+    thunderbolts:   "linear-gradient(135deg,#18181b,#3f3f46 50%,#7e22ce 100%)",
+    fantasticfour:  "linear-gradient(135deg,#0b1f3a,#1d4ed8 50%,#9ca3af 100%)",
+    quicksilver:    "linear-gradient(135deg,#1e293b,#334155 50%,#94a3b8 100%)",
+    wandavision:    "linear-gradient(135deg,#450a0a,#7f1d1d 45%,#15803d 100%)",
+    falconwinter:   "linear-gradient(135deg,#7f1d1d,#1e3a8a 50%,#cbd5e1 100%)",
+    loki:           "linear-gradient(135deg,#052e16,#15803d 50%,#ca8a04 100%)",
+    hawkeye:        "linear-gradient(135deg,#2e1065,#6d28d9 50%,#b91c1c 100%)",
+    msmarvel:       "linear-gradient(135deg,#4c0519,#be185d 50%,#0ea5e9 100%)",
+    agatha:         "linear-gradient(135deg,#1a0b2e,#6b21a8 50%,#4ade80 100%)",
+    moonknight:     "linear-gradient(135deg,#0f172a,#475569 50%,#e2e8f0 100%)",
+    shehulk:        "linear-gradient(135deg,#14532d,#4ade80 50%,#a78bfa 100%)",
+    secretinvasion: "linear-gradient(135deg,#0a0a0a,#14532d 50%,#65a30d 100%)",
+    echo:           "linear-gradient(135deg,#450a0a,#991b1b 50%,#1c1917 100%)",
+    daredevil:      "linear-gradient(135deg,#1c1917,#7f1d1d 50%,#dc2626 100%)",
+    whatif:         "linear-gradient(135deg,#1e1b4b,#4338ca 50%,#facc15 100%)",
+  };
+
+  // title, date, studio, themeKey, flags: {nonmcu, upcoming, note}, link (URL string, isi sendiri di sini — kosongkan "" kalau belum ada linknya)
+  const DATA = [
+    ["Spider-Man", "3 Mei 2002", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.4, nonmcu:true, note:"Origin cerita Peter Parker versi Sam Raimi, gak nyambung ke MCU"}, "https://idlix.net/movie/spider-man-2002"],
+    ["Hulk", "20 Juni 2003", "Universal Pictures", "hulk", {rating:5.6, nonmcu:true, note:"Versi Ang Lee soal asal-usul Bruce Banner, beda total dari versi MCU"}, "https://idlix.net/movie/hulk-2003"],
+    ["Spider-Man 2", "30 Juni 2004", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.5, nonmcu:true, note:"Peter jaga identitas rahasia sambil lawan Doc Ock"}, "https://idlix.net/movie/spider-man-2-2004"],
+    ["Spider-Man 3", "4 Mei 2007", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.3, nonmcu:true, note:"Venom masuk cerita, biasa dianggap film terlemah trilogi Raimi"}, "https://idlix.net/movie/spider-man-3-2007"],
+    ["Iron Man", "2 Mei 2008", "Marvel Studios / Paramount Pictures", "ironman", {rating:7.9, note:"Film pembuka MCU — Tony Stark jadi Iron Man"}, "https://idlix.net/movie/iron-man-2008"],
+    ["The Incredible Hulk", "13 Juni 2008", "Marvel Studios / Universal Pictures", "hulk", {rating:6.6, note:"Reboot Hulk versi MCU, General Ross mulai dikenalin"}, "https://idlix.net/movie/the-incredible-hulk-2008"],
+    ["Iron Man 2", "7 Mei 2010", "Marvel Studios / Paramount Pictures", "ironman", {rating:6.9, note:"Tony hadapi keracunan palladium & Whiplash, SHIELD mulai kelihatan"}, "https://idlix.net/movie/iron-man-2-2010"],
+    ["Thor", "6 Mei 2011", "Marvel Studios / Paramount Pictures", "thor", {rating:7.0, note:"Perkenalan Asgard, Thor diasingkan ke Bumi"}, "https://idlix.net/movie/thor-2011"],
+    ["Captain America: The First Avenger", "22 Juli 2011", "Marvel Studios / Paramount Pictures", "cap", {rating:6.9, note:"Asal-usul Steve Rogers di era Perang Dunia II"}, "https://idlix.net/movie/captain-america-the-first-avenger-2011"],
+    ["The Amazing Spider-Man", "3 Juli 2012", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.9, nonmcu:true, note:"Reboot Spider-Man versi Sony dengan Andrew Garfield"}, "https://idlix.net/movie/the-amazing-spider-man-2012"],
+    ["The Avengers", "4 Mei 2012", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.0, note:"Tim Avengers pertama kali bersatu lawan Loki"}, "https://idlix.net/movie/the-avengers-2012"],
+    ["Iron Man 3", "3 Mei 2013", "Marvel Studios / Walt Disney Studios", "ironman", {rating:7.1, note:"Tony hadapi trauma pasca New York, lawan Mandarin"}, "https://idlix.net/movie/iron-man-3-2013"],
+    ["Thor: The Dark World", "8 November 2013", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.6, note:"Thor lawan Malekith demi selamatkan Asgard & alam semesta"}, "https://idlix.net/movie/thor-the-dark-world-2013"],
+    ["The Amazing Spider-Man 2", "2 Mei 2014", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.6, nonmcu:true, note:"Peter lawan Electro, jadi film terakhir sebelum seri Garfield disetop"}, "https://idlix.net/movie/the-amazing-spider-man-2-2014"],
+    ["Captain America: The Winter Soldier", "4 April 2014", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Cap ungkap HYDRA menyusup ke SHIELD, ketemu Winter Soldier"}, "https://idlix.net/movie/captain-america-the-winter-soldier-2014"],
+    ["Guardians of the Galaxy", "1 Agustus 2014", "Marvel Studios / Walt Disney Studios", "gotg", {rating:8.0, note:"Star-Lord dkk kumpul buat lindungin sebuah Infinity Stone"}, "https://idlix.net/movie/guardians-of-the-galaxy-2014"],
+    ["Avengers: Age of Ultron", "1 Mei 2015", "Marvel Studios / Walt Disney Studios", "avengers", {rating:7.3, note:"Avengers lawan Ultron — debut Quicksilver (MCU) cuma cameo, gak ada film solo"}, "https://idlix.net/movie/avengers-age-of-ultron-2015"],
+    ["Ant-Man", "17 Juli 2015", "Marvel Studios / Walt Disney Studios", "antman", {rating:7.0, note:"Scott Lang jadi Ant-Man, curi teknologi Pym Particle"}, "https://idlix.net/movie/ant-man-2015"],
+    ["Captain America: Civil War", "6 Mei 2016", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Avengers pecah dua kubu gara-gara Sokovia Accords"}, "https://idlix.net/movie/captain-america-civil-war-2016"],
+    ["Doctor Strange", "4 November 2016", "Marvel Studios / Walt Disney Studios", "strange", {rating:7.5, note:"Asal-usul Stephen Strange jadi Sorcerer Supreme"}, "https://idlix.net/movie/doctor-strange-2016"],
+    ["Guardians of the Galaxy Vol. 2", "5 Mei 2017", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.6, note:"Star-Lord ketemu ayah kandungnya, Ego"}, "https://idlix.net/movie/guardians-of-the-galaxy-vol-2-2017"],
+    ["Spider-Man: Homecoming", "7 Juli 2017", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter debut resmi di MCU, dibimbing Tony Stark"}, "https://idlix.net/movie/spider-man-homecoming-2017"],
+    ["Thor: Ragnarok", "3 November 2017", "Marvel Studios / Walt Disney Studios", "thor", {rating:7.9, note:"Thor kehilangan Asgard, lawan Hela"}, "https://idlix.net/movie/thor-ragnarok-2017"],
+    ["Black Panther", "16 Februari 2018", "Marvel Studios / Walt Disney Studios", "panther", {rating:7.3, note:"T'Challa jadi raja Wakanda, lawan Killmonger"}, "https://idlix.net/movie/black-panther-2018"],
+    ["Avengers: Infinity War", "27 April 2018", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Thanos kumpulin semua Infinity Stone, setengah alam semesta lenyap"}, "https://idlix.net/movie/avengers-infinity-war-2018"],
+    ["Ant-Man and the Wasp", "6 Juli 2018", "Marvel Studios / Walt Disney Studios", "antman", {rating:7.0, note:"Scott bantu selamatkan Janet van Dyne dari Quantum Realm"}, "https://idlix.net/movie/ant-man-and-the-wasp-2018"],
+    ["Captain Marvel", "8 Maret 2019", "Marvel Studios / Walt Disney Studios", "marvel", {rating:6.8, note:"Carol Danvers dapat kekuatan kosmik, latar tahun 90-an"}, "https://idlix.net/movie/captain-marvel-2019"],
+    ["Avengers: Endgame", "26 April 2019", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Sisa Avengers coba balikin korban Snap-nya Thanos"}, "https://idlix.net/movie/avengers-endgame-2019"],
+    ["Spider-Man: Far From Home", "2 Juli 2019", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter hadapi Mysterio pasca Endgame"}, "https://idlix.net/movie/spider-man-far-from-home-2019"],
+    ["WandaVision", "15 Januari 2021", "Marvel Studios / Disney+", "wandavision", {rating:7.9, tvseries:true, note:"Wajib nonton — nentuin arc Wanda yang dibawa ke Doctor Strange 2"}, "https://idlix.net/series/wandavision-2021"],
+    ["The Falcon and the Winter Soldier", "19 Maret 2021", "Marvel Studios / Disney+", "falconwinter", {rating:7.3, tvseries:true, note:"Sam & Bucky hadapi Flag Smashers, isu soal siapa yang layak pegang perisai Cap"}, "https://idlix.net/series/the-falcon-and-the-winter-soldier-2021"],
+    ["Loki (Season 1)", "9 Juni 2021", "Marvel Studios / Disney+", "loki", {rating:8.2, tvseries:true, note:"Wajib nonton — pembuka konsep multiverse & TVA"}, "https://idlix.net/series/loki-2021"],
+    ["Black Widow", "9 Juli 2021", "Marvel Studios / Walt Disney Studios", "widow", {rating:6.7, note:"Natasha hadapi masa lalu Red Room, latar sebelum Infinity War"}, "https://idlix.net/movie/black-widow-2021"],
+    ["What If...?", "11 Agustus 2021", "Marvel Studios / Disney+", "whatif", {rating:7.4, tvseries:true, note:"Serial animasi multiverse, 3 season sampai 2024 — opsional tapi nyambung ke tema multiverse Doctor Strange 2 & Doomsday"}, "https://idlix.net/series/what-if-2021"],
+    ["Shang-Chi and the Legend of the Ten Rings", "3 September 2021", "Marvel Studios / Walt Disney Studios", "shangchi", {rating:7.4, note:"Shang-Chi lawan ayahnya sendiri, pemegang Ten Rings"}, "https://idlix.net/movie/shang-chi-and-the-legend-of-the-ten-rings-2021"],
+    ["Eternals", "5 November 2021", "Marvel Studios / Walt Disney Studios", "eternals", {rating:6.3, note:"Sekelompok makhluk abadi ciptaan Celestial mulai terungkap"}, "https://idlix.net/movie/eternals-2021"],
+    ["Hawkeye", "24 November 2021", "Marvel Studios / Disney+", "hawkeye", {rating:7.6, tvseries:true, note:"Ngenalin Yelena Belova, tokoh sentral di Thunderbolts*"}, "https://idlix.net/series/hawkeye-2021"],
+    ["Spider-Man: No Way Home", "17 Desember 2021", "Marvel Studios / Sony Pictures", "spiderman", {rating:8.2, note:"Multiverse pecah, villain dari franchise Spider-Man lain muncul"}, "https://idlix.net/movie/spider-man-no-way-home-2021"],
+    ["Moon Knight", "30 Maret 2022", "Marvel Studios / Disney+", "moonknight", {rating:7.3, tvseries:true, note:"Marc Spector berbagi tubuh sama Steven Grant, terikat dewa Mesir Khonshu"}, "https://idlix.net/series/moon-knight-2022"],
+    ["Doctor Strange in the Multiverse of Madness", "6 Mei 2022", "Marvel Studios / Walt Disney Studios", "strange", {rating:6.9, note:"Strange jelajahi multiverse buat lindungin America Chavez"}, "https://idlix.net/movie/doctor-strange-in-the-multiverse-of-madness-2022"],
+    ["Ms. Marvel", "8 Juni 2022", "Marvel Studios / Disney+", "msmarvel", {rating:6.5, tvseries:true, note:"Ngenalin Kamala Khan sebelum The Marvels"}, "https://idlix.net/series/ms-marvel-2022"],
+    ["Thor: Love and Thunder", "8 Juli 2022", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.2, note:"Thor lawan Gorr the God Butcher bareng Jane Foster"}, "https://idlix.net/movie/thor-love-and-thunder-2022"],
+    ["She-Hulk: Attorney at Law", "18 Agustus 2022", "Marvel Studios / Disney+", "shehulk", {rating:5.3, tvseries:true, note:"Jennifer Walters dapat kekuatan Hulk, nada cerita lebih komedi hukum"}, "https://idlix.net/series/she-hulk-attorney-at-law-2022"],
+    ["Black Panther: Wakanda Forever", "11 November 2022", "Marvel Studios / Walt Disney Studios", "panther", {rating:6.7, note:"Wakanda berduka & hadapi ancaman dari Talokan"}, "https://idlix.net/movie/black-panther-wakanda-forever-2022"],
+    ["Ant-Man and the Wasp: Quantumania", "17 Februari 2023", "Marvel Studios / Walt Disney Studios", "antman", {rating:6.1, note:"Keluarga Lang-Van Dyne kejebak di Quantum Realm, ketemu Kang"}, "https://idlix.net/movie/ant-man-and-the-wasp-quantumania-2023"],
+    ["Guardians of the Galaxy Vol. 3", "5 Mei 2023", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.9, note:"Perjalanan terakhir Guardians original, ungkap asal-usul Rocket"}, "https://idlix.net/movie/guardians-of-the-galaxy-vol-3-2023"],
+    ["Secret Invasion", "21 Juni 2023", "Marvel Studios / Disney+", "secretinvasion", {rating:5.8, tvseries:true, note:"Skrull yang menyamar jadi manusia mulai bikin kekacauan global"}, "https://idlix.net/series/secret-invasion-2023"],
+    ["Loki (Season 2)", "6 Oktober 2023", "Marvel Studios / Disney+", "loki", {rating:8.3, tvseries:true, note:"Wajib nonton — Avengers: Doomsday itu sekuel langsung dari sini"}, "https://idlix.net/series/loki-2021"],
+    ["The Marvels", "10 November 2023", "Marvel Studios / Walt Disney Studios", "marvel", {rating:5.5, note:"Carol, Kamala, & Monica Rambeau tukar tempat gara-gara kekuatan mereka nyambung"}, "https://idlix.net/movie/the-marvels-2023"],
+    ["Echo", "9 Januari 2024", "Marvel Studios / Disney+", "echo", {rating:6.5, tvseries:true, note:"Maya Lopez hadapi masa lalu & Kingpin, spin-off dari Hawkeye"}, "https://idlix.net/series/echo-2024"],
+    ["Deadpool & Wolverine", "26 Juli 2024", "Marvel Studios / Walt Disney Studios", "deadpool", {rating:7.7, note:"Deadpool resmi masuk MCU, reunian sama Wolverine"}, "https://idlix.net/movie/deadpool-and-wolverine-2024"],
+    ["Agatha All Along", "18 September 2024", "Marvel Studios / Disney+", "agatha", {rating:6.9, tvseries:true, note:"Lanjutan dunia WandaVision, nyambung ke VisionQuest"}, "https://idlix.net/series/agatha-all-along-2024"],
+    ["Captain America: Brave New World", "14 Februari 2025", "Marvel Studios / Walt Disney Studios", "cap", {rating:6.0, note:"Sam Wilson jadi Cap baru, hadapi konspirasi politik & Hulk merah"}, "https://idlix.net/movie/captain-america-brave-new-world-2025"],
+    ["Daredevil: Born Again", "4 Maret 2025", "Marvel Studios / Disney+", "daredevil", {rating:7.5, tvseries:true, note:"Matt Murdock balik jadi Daredevil, Kingpin jadi walikota New York"}, "https://idlix.net/series/daredevil-born-again-2025"],
+    ["Thunderbolts*", "2 Mei 2025", "Marvel Studios / Walt Disney Studios", "thunderbolts", {rating:7.3, note:"Tim antihero 'sampah' MCU dipaksa kerja bareng"}, "https://idlix.net/movie/thunderbolts-2025"],
+    ["The Fantastic Four: First Steps", "25 Juli 2025", "Marvel Studios / Walt Disney Studios", "fantasticfour", {rating:7.5, note:"Fantastic Four debut MCU dari Earth-828, lawan Galactus"}, "https://idlix.net/movie/the-fantastic-4-first-steps-2025"],
+    ["Spider-Man: Brand New Day", "31 Juli 2026", "Marvel Studios / Sony Pictures", "spiderman", {upcoming:true, note:"Kelanjutan Peter pasca semua orang lupa identitasnya"}, ""],
+    ["Avengers: Doomsday", "18 Desember 2026", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Beberapa tim Avengers dari universe berbeda ketemu Doctor Doom"}, ""],
+    ["Avengers: Secret Wars", "17 Desember 2027", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Puncak Multiverse Saga, kemungkinan reset besar-besaran MCU"}, ""],
+  ];
+
+  const STORAGE_KEY = "marvel-checklist-state-v9";
+  let state = {};
+  let categoryFilter = "all";
+  let heroFilter = "all";
+  let searchQuery = "";
+  let sortMode = "default";
+
+  const HERO_LABELS = {
+    spiderman: "Spider-Man", ironman: "Iron Man", hulk: "Hulk", thor: "Thor",
+    cap: "Captain America", avengers: "Avengers", gotg: "Guardians of the Galaxy",
+    antman: "Ant-Man", strange: "Doctor Strange", panther: "Black Panther",
+    marvel: "Captain Marvel", widow: "Black Widow", shangchi: "Shang-Chi",
+    eternals: "Eternals", deadpool: "Deadpool", thunderbolts: "Thunderbolts",
+    fantasticfour: "Fantastic Four", wandavision: "WandaVision",
+    falconwinter: "Falcon & Winter Soldier", loki: "Loki", hawkeye: "Hawkeye",
+    whatif: "What If...?", moonknight: "Moon Knight", msmarvel: "Ms. Marvel",
+    shehulk: "She-Hulk", secretinvasion: "Secret Invasion", echo: "Echo",
+    agatha: "Agatha All Along", daredevil: "Daredevil",
+  };
+
+  // Storage layer: pakai window.storage kalau ada (di dalam Claude),
+  // fallback ke localStorage kalau dibuka langsung sebagai file offline.
+  function hasClaudeStorage(){
+    return typeof window !== "undefined" && window.storage && typeof window.storage.get === "function";
+  }
+
+  async function loadState(){
+    try{
+      if(hasClaudeStorage()){
+        const res = await window.storage.get(STORAGE_KEY);
+        if(res && res.value) state = JSON.parse(res.value);
+      } else {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if(raw) state = JSON.parse(raw);
+      }
+    }catch(e){ state = {}; }
+    render();
+  }
+  async function saveState(){
+    try{
+      if(hasClaudeStorage()){
+        await window.storage.set(STORAGE_KEY, JSON.stringify(state));
+      } else {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+    }catch(e){}
+  }
+
+  const listEl = document.getElementById("mc-list");
+  const ringFg = document.getElementById("mc-ring-fg");
+  const ringPct = document.getElementById("mc-ring-pct");
+  const countText = document.getElementById("mc-count-text");
+
+  function updateProgress(){
+    const total = DATA.length;
+    let done = 0;
+    DATA.forEach((_, i) => { if(state[i]) done++; });
+    const pct = total ? Math.round((done/total)*100) : 0;
+    const circumference = 2 * Math.PI * 23;
+    const offset = circumference - (pct/100) * circumference;
+    ringFg.style.strokeDasharray = circumference.toFixed(1);
+    ringFg.style.strokeDashoffset = offset.toFixed(1);
+    ringPct.textContent = pct + "%";
+    countText.textContent = done + "/" + total;
+  }
+
+  const resultCountEl = document.getElementById("mc-result-count");
+  const emptyEl = document.getElementById("mc-empty");
+
+  function applyFilter(){
+    let visibleCount = 0;
+    document.querySelectorAll(".mc-item").forEach(el => {
+      const isNonMcu = el.dataset.nonmcu === "1";
+      const isTv = el.dataset.tvseries === "1";
+      const theme = el.dataset.theme;
+      const title = el.dataset.title || "";
+
+      let show = true;
+      if(categoryFilter === "mcu") show = !isNonMcu && !isTv;
+      else if(categoryFilter === "nonmcu") show = isNonMcu;
+      else if(categoryFilter === "tvseries") show = isTv;
+
+      if(show && heroFilter !== "all") show = theme === heroFilter;
+      if(show && searchQuery) show = title.indexOf(searchQuery) !== -1;
+
+      el.classList.toggle("hidden", !show);
+      if(show) visibleCount++;
+    });
+    resultCountEl.textContent = visibleCount + " dari " + DATA.length + " judul";
+    emptyEl.style.display = visibleCount === 0 ? "block" : "none";
+  }
+
+  function parseYear(dateStr){
+    const parts = dateStr.trim().split(" ");
+    return parseInt(parts[parts.length - 1], 10);
+  }
+
+  function getSortedIndices(){
+    const idxs = DATA.map((_, i) => i);
+    if(sortMode === "az"){
+      idxs.sort((a, b) => DATA[a][0].localeCompare(DATA[b][0]));
+    } else if(sortMode === "year-desc" || sortMode === "year-asc"){
+      idxs.sort((a, b) => {
+        const ya = parseYear(DATA[a][1]);
+        const yb = parseYear(DATA[b][1]);
+        return sortMode === "year-desc" ? yb - ya : ya - yb;
+      });
+    } else if(sortMode === "rating"){
+      idxs.sort((a, b) => {
+        const ra = (DATA[a][4] && DATA[a][4].rating != null) ? DATA[a][4].rating : -1;
+        const rb = (DATA[b][4] && DATA[b][4].rating != null) ? DATA[b][4].rating : -1;
+        return rb - ra;
+      });
+    }
+    return idxs;
+  }
+
+  function render(){
+    listEl.innerHTML = "";
+    const idxs = getSortedIndices();
+    idxs.forEach(i => {
+      const entry = DATA[i];
+      const [title, date, studio, theme, flags, link] = entry;
+      const f = flags || {};
+      const hasLink = typeof link === "string" && link.trim().length > 0;
+      const row = document.createElement("div");
+      row.className = "mc-item" + (state[i] ? " done" : "");
+      row.style.setProperty("--item-bg", THEMES[theme] || THEMES.avengers);
+      row.dataset.nonmcu = f.nonmcu ? "1" : "0";
+      row.dataset.tvseries = f.tvseries ? "1" : "0";
+      row.dataset.theme = theme;
+      row.dataset.title = title.toLowerCase();
+
+      row.innerHTML = `
+        <button class="mc-check-btn${state[i] ? " checked" : ""}" data-idx="${i}"></button>
+        <div class="mc-item-body">
+          <div class="mc-item-title-row">
+            ${hasLink
+              ? `<a class="mc-item-title mc-item-title-link" href="${link}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${title}</a>`
+              : `<span class="mc-item-title">${title}</span>`}
+            ${f.nonmcu ? '<span class="mc-badge nonmcu">Non MCU</span>' : ""}
+            ${f.tvseries ? '<span class="mc-badge tvseries">TV Series</span>' : ""}
+            ${f.upcoming ? '<span class="mc-badge upcoming">Belum rilis</span>' : ""}
+          </div>
+          <div class="mc-item-meta">${date} · ${studio}${f.rating != null ? " · ★ " + f.rating.toFixed(1) : ""}</div>
+          ${f.note ? `<div class="mc-item-note">${f.note}</div>` : ""}
+        </div>
+      `;
+
+      const btn = row.querySelector(".mc-check-btn");
+      btn.addEventListener("click", () => {
+        state[i] = !state[i];
+        saveState();
+        row.classList.toggle("done", !!state[i]);
+        btn.classList.toggle("checked", !!state[i]);
+        row.classList.remove("just-checked");
+        void row.offsetWidth;
+        row.classList.add("just-checked");
+        updateProgress();
+      });
+
+      listEl.appendChild(row);
+    });
+    applyFilter();
+    updateProgress();
+  }
+
+  // Populate the per-hero <select> dynamically from themes actually used in DATA
+  const heroSelectEl = document.getElementById("mc-hero-select");
+  const seenThemes = [];
+  DATA.forEach(entry => {
+    const theme = entry[3];
+    if(seenThemes.indexOf(theme) === -1) seenThemes.push(theme);
+  });
+  seenThemes.forEach(theme => {
+    const label = HERO_LABELS[theme];
+    if(!label) return;
+    const opt = document.createElement("option");
+    opt.value = theme;
+    opt.textContent = label;
+    heroSelectEl.appendChild(opt);
+  });
+
+  document.querySelectorAll(".mc-filters .mc-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll(".mc-filters .mc-chip").forEach(c => c.classList.remove("active"));
+      chip.classList.add("active");
+      categoryFilter = chip.dataset.filter;
+      applyFilter();
+    });
+  });
+
+  heroSelectEl.addEventListener("change", (e) => {
+    heroFilter = e.target.value;
+    applyFilter();
+  });
+
+  document.getElementById("mc-sort").addEventListener("change", (e) => {
+    sortMode = e.target.value;
+    render();
+  });
+
+  const searchInput = document.getElementById("mc-search-input");
+  const searchClear = document.getElementById("mc-search-clear");
+  searchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value.trim().toLowerCase();
+    searchClear.classList.toggle("show", searchQuery.length > 0);
+    applyFilter();
+  });
+  searchClear.addEventListener("click", () => {
+    searchInput.value = "";
+    searchQuery = "";
+    searchClear.classList.remove("show");
+    applyFilter();
+    searchInput.focus();
+  });
+
+  document.getElementById("mc-reset-btn").addEventListener("click", async () => {
+    state = {};
+    await saveState();
+    render();
+  });
+
+  loadState();
+})();
+</script>
+</body>
+</html>
