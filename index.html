@@ -232,6 +232,7 @@
   .mc-badge.tvseries{ background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.55); }
   .mc-badge.upcoming{ background: rgba(255,255,255,0.92); color: #111; }
   .mc-badge.cameo{ background: rgba(0,0,0,0.4); color: #fff; border: 1px dashed rgba(255,255,255,0.6); }
+  .mc-badge.animation{ background: rgba(14,165,233,0.28); color: #fff; border: 1px solid rgba(14,165,233,0.7); }
 
   .mc-reset{
     display:block;
@@ -324,6 +325,7 @@
       <button class="mc-chip" data-filter="mcu">MCU</button>
       <button class="mc-chip" data-filter="nonmcu">Non MCU</button>
       <button class="mc-chip" data-filter="tvseries">TV Series</button>
+      <button class="mc-chip" data-filter="animation">Animation</button>
     </div>
   </div>
 
@@ -393,111 +395,116 @@
     gifted:         "linear-gradient(135deg,#1e1b4b,#4338ca 50%,#818cf8 100%)",
     runaways:       "linear-gradient(135deg,#3b0764,#a21caf 50%,#f472b6 100%)",
     cloakdagger:    "linear-gradient(135deg,#0a0a0a,#1e293b 50%,#e2e8f0 100%)",
+    spiderverse:    "linear-gradient(135deg,#3b0764,#b91c1c 50%,#0ea5e9 100%)",
   };
 
   // title, date, studio, themeKey, flags: {nonmcu, upcoming, note}, link (URL string, isi sendiri di sini — kosongkan "" kalau belum ada linknya)
   const DATA = [
-    ["X-Men", "14 Juli 2000", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Pembuka franchise X-Men versi Fox, gak nyambung MCU tapi tetep Marvel"}, ""],
-    ["Blade II", "22 Maret 2002", "New Line Cinema", "blade", {rating:6.7, nonmcu:true, note:"Blade lawan vampir mutan Reaper, non-MCU"}, ""],
-    ["Spider-Man", "3 Mei 2002", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.4, nonmcu:true, note:"Origin cerita Peter Parker versi Sam Raimi, gak nyambung ke MCU"}, "https://idlix.net/movie/spider-man-2002"],
-    ["Daredevil", "14 Februari 2003", "20th Century Fox / Regency Enterprises", "daredevil", {rating:5.3, nonmcu:true, note:"Versi awal Daredevil sebelum yang Netflix/Disney+, non-MCU"}, ""],
-    ["X2: X-Men United", "2 Mei 2003", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Dianggap salah satu X-Men terbaik era Fox"}, ""],
-    ["Hulk", "20 Juni 2003", "Universal Pictures", "hulk", {rating:5.6, nonmcu:true, note:"Versi Ang Lee soal asal-usul Bruce Banner, beda total dari versi MCU"}, "https://idlix.net/movie/hulk-2003"],
-    ["Spider-Man 2", "30 Juni 2004", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.5, nonmcu:true, note:"Peter jaga identitas rahasia sambil lawan Doc Ock"}, "https://idlix.net/movie/spider-man-2-2004"],
-    ["Blade: Trinity", "8 Desember 2004", "New Line Cinema", "blade", {rating:5.9, nonmcu:true, note:"Penutup trilogi Blade, non-MCU"}, ""],
-    ["Elektra", "14 Januari 2005", "20th Century Fox / Regency Enterprises", "elektra", {rating:4.7, nonmcu:true, note:"Spin-off dari Daredevil 2003, non-MCU"}, ""],
-    ["Fantastic Four", "8 Juli 2005", "20th Century Fox", "fantasticfourfox", {rating:5.7, nonmcu:true, note:"Versi Fox, non-MCU"}, ""],
-    ["X-Men: The Last Stand", "26 Mei 2006", "20th Century Fox", "xmenfox", {rating:6.8, nonmcu:true, note:"Dark Phoenix Saga versi pertama, non-MCU"}, ""],
-    ["Ghost Rider", "16 Februari 2007", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:5.2, nonmcu:true, note:"Nicolas Cage jadi Johnny Blaze, non-MCU"}, ""],
-    ["Spider-Man 3", "4 Mei 2007", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.3, nonmcu:true, note:"Venom masuk cerita, biasa dianggap film terlemah trilogi Raimi"}, "https://idlix.net/movie/spider-man-3-2007"],
-    ["Fantastic Four: Rise of the Silver Surfer", "15 Juni 2007", "20th Century Fox", "fantasticfourfox", {rating:5.6, nonmcu:true, note:"Sekuel Fantastic Four versi Fox, non-MCU"}, ""],
-    ["Iron Man", "2 Mei 2008", "Marvel Studios / Paramount Pictures", "ironman", {rating:7.9, note:"Film pembuka MCU — Tony Stark jadi Iron Man"}, "https://idlix.net/movie/iron-man-2008"],
-    ["The Incredible Hulk", "13 Juni 2008", "Marvel Studios / Universal Pictures", "hulk", {rating:6.6, note:"Reboot Hulk versi MCU, General Ross mulai dikenalin"}, "https://idlix.net/movie/the-incredible-hulk-2008"],
-    ["Punisher: War Zone", "5 Desember 2008", "Lionsgate", "punisher", {rating:5.4, nonmcu:true, note:"Reboot Punisher, non-MCU"}, ""],
-    ["X-Men Origins: Wolverine", "1 Mei 2009", "20th Century Fox", "wolverine", {rating:6, nonmcu:true, note:"Asal-usul Wolverine versi Fox, non-MCU"}, ""],
-    ["Iron Man 2", "7 Mei 2010", "Marvel Studios / Paramount Pictures", "ironman", {rating:6.9, note:"Tony hadapi keracunan palladium & Whiplash, SHIELD mulai kelihatan"}, "https://idlix.net/movie/iron-man-2-2010"],
-    ["Thor", "6 Mei 2011", "Marvel Studios / Paramount Pictures", "thor", {rating:7, note:"Perkenalan Asgard, Thor diasingkan ke Bumi"}, "https://idlix.net/movie/thor-2011"],
-    ["X-Men: First Class", "3 Juni 2011", "20th Century Fox", "xmenfox", {rating:7.7, nonmcu:true, note:"Reboot timeline X-Men, latar era 60-an, non-MCU"}, ""],
-    ["Captain America: The First Avenger", "22 Juli 2011", "Marvel Studios / Paramount Pictures", "cap", {rating:6.9, note:"Asal-usul Steve Rogers di era Perang Dunia II"}, "https://idlix.net/movie/captain-america-the-first-avenger-2011"],
-    ["Ghost Rider: Spirit of Vengeance", "17 Februari 2012", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:4.3, nonmcu:true, note:"Sekuel Ghost Rider, non-MCU"}, ""],
-    ["The Avengers", "4 Mei 2012", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8, note:"Tim Avengers pertama kali bersatu lawan Loki"}, "https://idlix.net/movie/the-avengers-2012"],
-    ["The Amazing Spider-Man", "3 Juli 2012", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.9, nonmcu:true, note:"Reboot Spider-Man versi Sony dengan Andrew Garfield"}, "https://idlix.net/movie/the-amazing-spider-man-2012"],
-    ["Iron Man 3", "3 Mei 2013", "Marvel Studios / Walt Disney Studios", "ironman", {rating:7.1, note:"Tony hadapi trauma pasca New York, lawan Mandarin"}, "https://idlix.net/movie/iron-man-3-2013"],
-    ["The Wolverine", "26 Juli 2013", "20th Century Fox", "wolverine", {rating:6.7, nonmcu:true, note:"Logan di Jepang, non-MCU"}, ""],
-    ["Agents of S.H.I.E.L.D. (Season 1)", "24 September 2013", "Marvel Television / ABC", "shield", {rating:7.3, tvseries:true, note:"Serial live-action MCU pertama, ngikutin tim agen SHIELD"}, ""],
-    ["Thor: The Dark World", "8 November 2013", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.6, note:"Thor lawan Malekith demi selamatkan Asgard & alam semesta"}, "https://idlix.net/movie/thor-the-dark-world-2013"],
-    ["Captain America: The Winter Soldier", "4 April 2014", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Cap ungkap HYDRA menyusup ke SHIELD, ketemu Winter Soldier"}, "https://idlix.net/movie/captain-america-the-winter-soldier-2014"],
-    ["The Amazing Spider-Man 2", "2 Mei 2014", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.6, nonmcu:true, note:"Peter lawan Electro, jadi film terakhir sebelum seri Garfield disetop"}, "https://idlix.net/movie/the-amazing-spider-man-2-2014"],
-    ["X-Men: Days of Future Past", "23 Mei 2014", "20th Century Fox", "xmenfox", {rating:7.9, nonmcu:true, note:"Gabungin cast X-Men klasik & First Class, non-MCU"}, ""],
-    ["Guardians of the Galaxy", "1 Agustus 2014", "Marvel Studios / Walt Disney Studios", "gotg", {rating:8, note:"Star-Lord dkk kumpul buat lindungin sebuah Infinity Stone"}, "https://idlix.net/movie/guardians-of-the-galaxy-2014"],
-    ["Agent Carter (Season 1)", "6 Januari 2015", "Marvel Television / ABC", "agentcarter", {rating:7.7, tvseries:true, note:"Peggy Carter pasca Captain America: The First Avenger"}, ""],
-    ["Daredevil (Season 1)", "10 April 2015", "Marvel Television / Netflix", "daredevil", {rating:8.6, tvseries:true, note:"Matt Murdock versi Netflix, kini jadi kanon lewat Born Again"}, ""],
-    ["Avengers: Age of Ultron", "1 Mei 2015", "Marvel Studios / Walt Disney Studios", "avengers", {rating:7.3, note:"Avengers lawan Ultron — debut Quicksilver (MCU) cuma cameo, gak ada film solo"}, "https://idlix.net/movie/avengers-age-of-ultron-2015"],
-    ["Ant-Man", "17 Juli 2015", "Marvel Studios / Walt Disney Studios", "antman", {rating:7, note:"Scott Lang jadi Ant-Man, curi teknologi Pym Particle"}, "https://idlix.net/movie/ant-man-2015"],
-    ["Fantastic Four", "7 Agustus 2015", "20th Century Fox", "fantasticfourfox", {rating:4.3, nonmcu:true, note:"Reboot Fantastic Four versi Fox, non-MCU"}, ""],
-    ["Jessica Jones (Season 1)", "20 November 2015", "Marvel Television / Netflix", "jessicajones", {rating:8, tvseries:true, note:"Detektif eks-superhero trauma lawan Kilgrave"}, ""],
-    ["Deadpool", "12 Februari 2016", "20th Century Fox", "deadpoolfox", {rating:8, nonmcu:true, note:"Deadpool versi Fox sebelum masuk MCU, non-MCU"}, ""],
-    ["Captain America: Civil War", "6 Mei 2016", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Avengers pecah dua kubu gara-gara Sokovia Accords"}, "https://idlix.net/movie/captain-america-civil-war-2016"],
-    ["X-Men: Apocalypse", "27 Mei 2016", "20th Century Fox", "xmenfox", {rating:6.9, nonmcu:true, note:"Apocalypse bangkit, non-MCU"}, ""],
-    ["Luke Cage (Season 1)", "30 September 2016", "Marvel Television / Netflix", "lukecage", {rating:7.7, tvseries:true, note:"Luke Cage jaga Harlem, non-MCU tapi sekarang mulai disebut kanon"}, ""],
-    ["Doctor Strange", "4 November 2016", "Marvel Studios / Walt Disney Studios", "strange", {rating:7.5, note:"Asal-usul Stephen Strange jadi Sorcerer Supreme"}, "https://idlix.net/movie/doctor-strange-2016"],
-    ["Legion (Season 1)", "8 Februari 2017", "FX / Marvel Television", "legion", {rating:8.3, tvseries:true, nonmcu:true, note:"Anak Professor X, non-MCU, gaya cerita psikedelik"}, ""],
-    ["Logan", "3 Maret 2017", "20th Century Fox", "wolverine", {rating:8.1, nonmcu:true, note:"Perpisahan Wolverine versi Hugh Jackman, non-MCU"}, ""],
-    ["Iron Fist (Season 1)", "17 Maret 2017", "Marvel Television / Netflix", "ironfist", {rating:6.4, tvseries:true, note:"Danny Rand belajar bela diri di K'un-Lun"}, ""],
-    ["Guardians of the Galaxy Vol. 2", "5 Mei 2017", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.6, note:"Star-Lord ketemu ayah kandungnya, Ego"}, "https://idlix.net/movie/guardians-of-the-galaxy-vol-2-2017"],
-    ["Spider-Man: Homecoming", "7 Juli 2017", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter debut resmi di MCU, dibimbing Tony Stark"}, "https://idlix.net/movie/spider-man-homecoming-2017"],
-    ["The Defenders", "18 Agustus 2017", "Marvel Television / Netflix", "defenders", {rating:7.9, tvseries:true, note:"Daredevil, Jessica Jones, Luke Cage & Iron Fist bersatu"}, ""],
-    ["Inhumans", "29 September 2017", "Marvel Television / ABC", "inhumans", {rating:4.4, tvseries:true, note:"Kerajaan Inhuman di Bulan, jarang disebut lagi di MCU"}, ""],
-    ["The Gifted (Season 1)", "2 Oktober 2017", "20th Century Fox / FX", "gifted", {rating:7.1, tvseries:true, nonmcu:true, note:"Keluarga mutan kabur dari pemerintah, non-MCU"}, ""],
-    ["Thor: Ragnarok", "3 November 2017", "Marvel Studios / Walt Disney Studios", "thor", {rating:7.9, note:"Thor kehilangan Asgard, lawan Hela"}, "https://idlix.net/movie/thor-ragnarok-2017"],
-    ["The Punisher (Season 1)", "17 November 2017", "Marvel Television / Netflix", "punisher", {rating:8.2, tvseries:true, note:"Frank Castle jalanin misi balas dendam sendiri"}, ""],
-    ["Runaways (Season 1)", "21 November 2017", "Marvel Television / Hulu", "runaways", {rating:6.7, tvseries:true, note:"Sekelompok remaja temukan orang tua mereka penjahat rahasia"}, ""],
-    ["Black Panther", "16 Februari 2018", "Marvel Studios / Walt Disney Studios", "panther", {rating:7.3, note:"T'Challa jadi raja Wakanda, lawan Killmonger"}, "https://idlix.net/movie/black-panther-2018"],
-    ["Avengers: Infinity War", "27 April 2018", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Thanos kumpulin semua Infinity Stone, setengah alam semesta lenyap"}, "https://idlix.net/movie/avengers-infinity-war-2018"],
-    ["Deadpool 2", "18 Mei 2018", "20th Century Fox", "deadpoolfox", {rating:7.7, nonmcu:true, note:"Deadpool versi Fox, kenalin Cable & X-Force, non-MCU"}, ""],
-    ["Cloak & Dagger (Season 1)", "7 Juni 2018", "Marvel Television / Freeform", "cloakdagger", {rating:7.1, tvseries:true, note:"Dua remaja dapat kekuatan cahaya & kegelapan"}, ""],
-    ["Ant-Man and the Wasp", "6 Juli 2018", "Marvel Studios / Walt Disney Studios", "antman", {rating:7, note:"Scott bantu selamatkan Janet van Dyne dari Quantum Realm"}, "https://idlix.net/movie/ant-man-and-the-wasp-2018"],
-    ["Venom", "5 Oktober 2018", "Sony Pictures / Columbia Pictures", "venom", {rating:6.6, nonmcu:true, note:"Eddie Brock & simbiot Venom, universe Sony sendiri"}, ""],
-    ["Captain Marvel", "8 Maret 2019", "Marvel Studios / Walt Disney Studios", "marvel", {rating:6.8, note:"Carol Danvers dapat kekuatan kosmik, latar tahun 90-an"}, "https://idlix.net/movie/captain-marvel-2019"],
-    ["Avengers: Endgame", "26 April 2019", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Sisa Avengers coba balikin korban Snap-nya Thanos"}, "https://idlix.net/movie/avengers-endgame-2019"],
-    ["Dark Phoenix", "7 Juni 2019", "20th Century Fox", "xmenfox", {rating:5.7, nonmcu:true, note:"Penutup franchise X-Men versi Fox, non-MCU"}, ""],
-    ["Spider-Man: Far From Home", "2 Juli 2019", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter hadapi Mysterio pasca Endgame"}, "https://idlix.net/movie/spider-man-far-from-home-2019"],
-    ["The New Mutants", "28 Agustus 2020", "20th Century Fox / Walt Disney Studios", "newmutants", {rating:5.5, nonmcu:true, note:"Spin-off horor X-Men, film terakhir era Fox, non-MCU"}, ""],
-    ["WandaVision", "15 Januari 2021", "Marvel Studios / Disney+", "wandavision", {rating:7.9, tvseries:true, note:"Wajib nonton — nentuin arc Wanda yang dibawa ke Doctor Strange 2"}, "https://idlix.net/series/wandavision-2021"],
-    ["The Falcon and the Winter Soldier", "19 Maret 2021", "Marvel Studios / Disney+", "falconwinter", {rating:7.3, tvseries:true, note:"Sam & Bucky hadapi Flag Smashers, isu soal siapa yang layak pegang perisai Cap"}, "https://idlix.net/series/the-falcon-and-the-winter-soldier-2021"],
-    ["Loki (Season 1)", "9 Juni 2021", "Marvel Studios / Disney+", "loki", {rating:8.2, tvseries:true, note:"Wajib nonton — pembuka konsep multiverse & TVA"}, "https://idlix.net/series/loki-2021"],
-    ["Black Widow", "9 Juli 2021", "Marvel Studios / Walt Disney Studios", "widow", {rating:6.7, note:"Natasha hadapi masa lalu Red Room, latar sebelum Infinity War"}, "https://idlix.net/movie/black-widow-2021"],
-    ["What If...?", "11 Agustus 2021", "Marvel Studios / Disney+", "whatif", {rating:7.4, tvseries:true, note:"Serial animasi multiverse, 3 season sampai 2024 — opsional tapi nyambung ke tema multiverse Doctor Strange 2 & Doomsday"}, "https://idlix.net/series/what-if-2021"],
-    ["Shang-Chi and the Legend of the Ten Rings", "3 September 2021", "Marvel Studios / Walt Disney Studios", "shangchi", {rating:7.4, note:"Shang-Chi lawan ayahnya sendiri, pemegang Ten Rings"}, "https://idlix.net/movie/shang-chi-and-the-legend-of-the-ten-rings-2021"],
-    ["Venom: Let There Be Carnage", "1 Oktober 2021", "Sony Pictures / Columbia Pictures", "venom", {rating:5.9, nonmcu:true, note:"Venom lawan Carnage, universe Sony"}, ""],
-    ["Eternals", "5 November 2021", "Marvel Studios / Walt Disney Studios", "eternals", {rating:6.3, note:"Sekelompok makhluk abadi ciptaan Celestial mulai terungkap"}, "https://idlix.net/movie/eternals-2021"],
-    ["Hawkeye", "24 November 2021", "Marvel Studios / Disney+", "hawkeye", {rating:7.6, tvseries:true, note:"Ngenalin Yelena Belova, tokoh sentral di Thunderbolts*"}, "https://idlix.net/series/hawkeye-2021"],
-    ["Spider-Man: No Way Home", "17 Desember 2021", "Marvel Studios / Sony Pictures", "spiderman", {rating:8.2, note:"Multiverse pecah, villain dari franchise Spider-Man lain muncul"}, "https://idlix.net/movie/spider-man-no-way-home-2021"],
-    ["Moon Knight", "30 Maret 2022", "Marvel Studios / Disney+", "moonknight", {rating:7.3, tvseries:true, note:"Marc Spector berbagi tubuh sama Steven Grant, terikat dewa Mesir Khonshu"}, "https://idlix.net/series/moon-knight-2022"],
-    ["Morbius", "1 April 2022", "Sony Pictures / Columbia Pictures", "morbius", {rating:5.2, nonmcu:true, note:"Vampir super versi Sony, universe sendiri"}, ""],
-    ["Doctor Strange in the Multiverse of Madness", "6 Mei 2022", "Marvel Studios / Walt Disney Studios", "strange", {rating:6.9, note:"Strange jelajahi multiverse buat lindungin America Chavez"}, "https://idlix.net/movie/doctor-strange-in-the-multiverse-of-madness-2022"],
-    ["Ms. Marvel", "8 Juni 2022", "Marvel Studios / Disney+", "msmarvel", {rating:6.5, tvseries:true, note:"Ngenalin Kamala Khan sebelum The Marvels"}, "https://idlix.net/series/ms-marvel-2022"],
-    ["Thor: Love and Thunder", "8 Juli 2022", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.2, note:"Thor lawan Gorr the God Butcher bareng Jane Foster"}, "https://idlix.net/movie/thor-love-and-thunder-2022"],
-    ["She-Hulk: Attorney at Law", "18 Agustus 2022", "Marvel Studios / Disney+", "shehulk", {rating:5.3, tvseries:true, note:"Jennifer Walters dapat kekuatan Hulk, nada cerita lebih komedi hukum"}, "https://idlix.net/series/she-hulk-attorney-at-law-2022"],
-    ["Black Panther: Wakanda Forever", "11 November 2022", "Marvel Studios / Walt Disney Studios", "panther", {rating:6.7, note:"Wakanda berduka & hadapi ancaman dari Talokan"}, "https://idlix.net/movie/black-panther-wakanda-forever-2022"],
-    ["Ant-Man and the Wasp: Quantumania", "17 Februari 2023", "Marvel Studios / Walt Disney Studios", "antman", {rating:6.1, note:"Keluarga Lang-Van Dyne kejebak di Quantum Realm, ketemu Kang"}, "https://idlix.net/movie/ant-man-and-the-wasp-quantumania-2023"],
-    ["Guardians of the Galaxy Vol. 3", "5 Mei 2023", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.9, note:"Perjalanan terakhir Guardians original, ungkap asal-usul Rocket"}, "https://idlix.net/movie/guardians-of-the-galaxy-vol-3-2023"],
-    ["Secret Invasion", "21 Juni 2023", "Marvel Studios / Disney+", "secretinvasion", {rating:5.8, tvseries:true, note:"Skrull yang menyamar jadi manusia mulai bikin kekacauan global"}, "https://idlix.net/series/secret-invasion-2023"],
-    ["Loki (Season 2)", "6 Oktober 2023", "Marvel Studios / Disney+", "loki", {rating:8.3, tvseries:true, note:"Wajib nonton — Avengers: Doomsday itu sekuel langsung dari sini"}, "https://idlix.net/series/loki-2021"],
-    ["The Marvels", "10 November 2023", "Marvel Studios / Walt Disney Studios", "marvel", {rating:5.5, note:"Carol, Kamala, & Monica Rambeau tukar tempat gara-gara kekuatan mereka nyambung"}, "https://idlix.net/movie/the-marvels-2023"],
-    ["Echo", "9 Januari 2024", "Marvel Studios / Disney+", "echo", {rating:6.5, tvseries:true, note:"Maya Lopez hadapi masa lalu & Kingpin, spin-off dari Hawkeye"}, "https://idlix.net/series/echo-2024"],
-    ["Madame Web", "14 Februari 2024", "Sony Pictures / Columbia Pictures", "madameweb", {rating:4, nonmcu:true, note:"Universe Sony, gak nyambung MCU"}, ""],
-    ["Deadpool & Wolverine", "26 Juli 2024", "Marvel Studios / Walt Disney Studios", "deadpool", {rating:7.7, note:"Deadpool resmi masuk MCU, reunian sama Wolverine"}, "https://idlix.net/movie/deadpool-and-wolverine-2024"],
-    ["Agatha All Along", "18 September 2024", "Marvel Studios / Disney+", "agatha", {rating:6.9, tvseries:true, note:"Lanjutan dunia WandaVision, nyambung ke VisionQuest"}, "https://idlix.net/series/agatha-all-along-2024"],
-    ["Venom: The Last Dance", "25 Oktober 2024", "Sony Pictures / Columbia Pictures", "venom", {rating:5.4, nonmcu:true, note:"Penutup trilogi Venom versi Sony"}, ""],
-    ["Kraven the Hunter", "13 Desember 2024", "Sony Pictures / Columbia Pictures", "kraven", {rating:5.4, nonmcu:true, note:"Asal-usul Kraven the Hunter, universe Sony"}, ""],
-    ["Captain America: Brave New World", "14 Februari 2025", "Marvel Studios / Walt Disney Studios", "cap", {rating:6, note:"Sam Wilson jadi Cap baru, hadapi konspirasi politik & Hulk merah"}, "https://idlix.net/movie/captain-america-brave-new-world-2025"],
-    ["Daredevil: Born Again", "4 Maret 2025", "Marvel Studios / Disney+", "daredevil", {rating:7.5, tvseries:true, note:"Matt Murdock balik jadi Daredevil, Kingpin jadi walikota New York"}, "https://idlix.net/series/daredevil-born-again-2025"],
-    ["Thunderbolts*", "2 Mei 2025", "Marvel Studios / Walt Disney Studios", "thunderbolts", {rating:7.3, note:"Tim antihero 'sampah' MCU dipaksa kerja bareng"}, "https://idlix.net/movie/thunderbolts-2025"],
-    ["The Fantastic Four: First Steps", "25 Juli 2025", "Marvel Studios / Walt Disney Studios", "fantasticfour", {rating:7.5, note:"Fantastic Four debut MCU dari Earth-828, lawan Galactus"}, "https://idlix.net/movie/the-fantastic-4-first-steps-2025"],
+    ["Blade", "21 Agustus 1998", "New Line Cinema", "blade", {rating:7.1, nonmcu:true, note:"Film pembuka trilogi Blade, base awal karakter Blade sebelum tahun 2000"}, "https://z2.idlixku.com/movie/blade-1998"],
+    ["X-Men", "14 Juli 2000", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Pembuka franchise X-Men versi Fox, gak nyambung MCU tapi tetep Marvel"}, "https://z2.idlixku.com/movie/x-men-2000"],
+    ["Blade II", "22 Maret 2002", "New Line Cinema", "blade", {rating:6.7, nonmcu:true, note:"Blade lawan vampir mutan Reaper, non-MCU"}, "https://z2.idlixku.com/movie/blade-ii-2002"],
+    ["Spider-Man", "3 Mei 2002", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.4, nonmcu:true, note:"Origin cerita Peter Parker versi Sam Raimi, gak nyambung ke MCU"}, "https://z2.idlixku.com/movie/spider-man-2002"],
+    ["Daredevil", "14 Februari 2003", "20th Century Fox / Regency Enterprises", "daredevil", {rating:5.3, nonmcu:true, note:"Versi awal Daredevil sebelum yang Netflix/Disney+, non-MCU"}, "https://z2.idlixku.com/movie/daredevil-2003"],
+    ["X2: X-Men United", "2 Mei 2003", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Dianggap salah satu X-Men terbaik era Fox"}, "https://z2.idlixku.com/movie/x2-x-men-united-2003"],
+    ["Hulk", "20 Juni 2003", "Universal Pictures", "hulk", {rating:5.6, nonmcu:true, note:"Versi Ang Lee soal asal-usul Bruce Banner, beda total dari versi MCU"}, "https://z2.idlixku.com/movie/hulk-2003"],
+    ["Spider-Man 2", "30 Juni 2004", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.5, nonmcu:true, note:"Peter jaga identitas rahasia sambil lawan Doc Ock"}, "https://z2.idlixku.com/movie/spider-man-2-2004"],
+    ["Blade: Trinity", "8 Desember 2004", "New Line Cinema", "blade", {rating:5.9, nonmcu:true, note:"Penutup trilogi Blade, non-MCU"}, "https://z2.idlixku.com/movie/blade-trinity-2004"],
+    ["Elektra", "14 Januari 2005", "20th Century Fox / Regency Enterprises", "elektra", {rating:4.7, nonmcu:true, note:"Spin-off dari Daredevil 2003, non-MCU"}, "https://z2.idlixku.com/movie/elektra-2005"],
+    ["Fantastic Four", "8 Juli 2005", "20th Century Fox", "fantasticfourfox", {rating:5.7, nonmcu:true, note:"Versi Fox, non-MCU"}, "https://z2.idlixku.com/movie/fantastic-four-2005"],
+    ["X-Men: The Last Stand", "26 Mei 2006", "20th Century Fox", "xmenfox", {rating:6.8, nonmcu:true, note:"Dark Phoenix Saga versi pertama, non-MCU"}, "https://z2.idlixku.com/movie/x-men-the-last-stand-2006"],
+    ["Ghost Rider", "16 Februari 2007", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:5.2, nonmcu:true, note:"Nicolas Cage jadi Johnny Blaze, non-MCU"}, "https://z2.idlixku.com/movie/ghost-rider-2007"],
+    ["Spider-Man 3", "4 Mei 2007", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.3, nonmcu:true, note:"Venom masuk cerita, biasa dianggap film terlemah trilogi Raimi"}, "https://z2.idlixku.com/movie/spider-man-3-2007"],
+    ["Fantastic Four: Rise of the Silver Surfer", "15 Juni 2007", "20th Century Fox", "fantasticfourfox", {rating:5.6, nonmcu:true, note:"Sekuel Fantastic Four versi Fox, non-MCU"}, "https://z2.idlixku.com/movie/fantastic-four-rise-of-the-silver-surfer-2007"],
+    ["Iron Man", "2 Mei 2008", "Marvel Studios / Paramount Pictures", "ironman", {rating:7.9, note:"Film pembuka MCU — Tony Stark jadi Iron Man"}, "https://z2.idlixku.com/movie/iron-man-2008"],
+    ["The Incredible Hulk", "13 Juni 2008", "Marvel Studios / Universal Pictures", "hulk", {rating:6.6, note:"Reboot Hulk versi MCU, General Ross mulai dikenalin"}, "https://z2.idlixku.com/movie/the-incredible-hulk-2008"],
+    ["Punisher: War Zone", "5 Desember 2008", "Lionsgate", "punisher", {rating:5.4, nonmcu:true, note:"Reboot Punisher, non-MCU"}, "https://z2.idlixku.com/movie/punisher-war-zone-2008"],
+    ["X-Men Origins: Wolverine", "1 Mei 2009", "20th Century Fox", "wolverine", {rating:6, nonmcu:true, note:"Asal-usul Wolverine versi Fox, non-MCU"}, "https://z2.idlixku.com/movie/x-men-origins-wolverine-2009"],
+    ["Iron Man 2", "7 Mei 2010", "Marvel Studios / Paramount Pictures", "ironman", {rating:6.9, note:"Tony hadapi keracunan palladium & Whiplash, SHIELD mulai kelihatan"}, "https://z2.idlixku.com/movie/iron-man-2-2010"],
+    ["Thor", "6 Mei 2011", "Marvel Studios / Paramount Pictures", "thor", {rating:7, note:"Perkenalan Asgard, Thor diasingkan ke Bumi"}, "https://z2.idlixku.com/movie/thor-2011"],
+    ["X-Men: First Class", "3 Juni 2011", "20th Century Fox", "xmenfox", {rating:7.7, nonmcu:true, note:"Reboot timeline X-Men, latar era 60-an, non-MCU"}, "https://z2.idlixku.com/movie/x-men-first-class-2011"],
+    ["Captain America: The First Avenger", "22 Juli 2011", "Marvel Studios / Paramount Pictures", "cap", {rating:6.9, note:"Asal-usul Steve Rogers di era Perang Dunia II"}, "https://z2.idlixku.com/movie/captain-america-the-first-avenger-2011"],
+    ["Ghost Rider: Spirit of Vengeance", "17 Februari 2012", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:4.3, nonmcu:true, note:"Sekuel Ghost Rider, non-MCU"}, "https://z2.idlixku.com/movie/ghost-rider-spirit-of-vengeance-2012"],
+    ["The Avengers", "4 Mei 2012", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8, note:"Tim Avengers pertama kali bersatu lawan Loki"}, "https://z2.idlixku.com/movie/the-avengers-2012"],
+    ["The Amazing Spider-Man", "3 Juli 2012", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.9, nonmcu:true, note:"Reboot Spider-Man versi Sony dengan Andrew Garfield"}, "https://z2.idlixku.com/movie/the-amazing-spider-man-2012"],
+    ["Iron Man 3", "3 Mei 2013", "Marvel Studios / Walt Disney Studios", "ironman", {rating:7.1, note:"Tony hadapi trauma pasca New York, lawan Mandarin"}, "https://z2.idlixku.com/movie/iron-man-3-2013"],
+    ["The Wolverine", "26 Juli 2013", "20th Century Fox", "wolverine", {rating:6.7, nonmcu:true, note:"Logan di Jepang, non-MCU"}, "https://z2.idlixku.com/movie/the-wolverine-2013"],
+    ["Agents of S.H.I.E.L.D. (Season 1)", "24 September 2013", "Marvel Television / ABC", "shield", {rating:7.3, tvseries:true, note:"Serial live-action MCU pertama, ngikutin tim agen SHIELD"}, "https://z2.idlixku.com/movie/agents-of-shield-season-1-2013"],
+    ["Thor: The Dark World", "8 November 2013", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.6, note:"Thor lawan Malekith demi selamatkan Asgard & alam semesta"}, "https://z2.idlixku.com/movie/thor-the-dark-world-2013"],
+    ["Captain America: The Winter Soldier", "4 April 2014", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Cap ungkap HYDRA menyusup ke SHIELD, ketemu Winter Soldier"}, "https://z2.idlixku.com/movie/captain-america-the-winter-soldier-2014"],
+    ["The Amazing Spider-Man 2", "2 Mei 2014", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.6, nonmcu:true, note:"Peter lawan Electro, jadi film terakhir sebelum seri Garfield disetop"}, "https://z2.idlixku.com/movie/the-amazing-spider-man-2-2014"],
+    ["X-Men: Days of Future Past", "23 Mei 2014", "20th Century Fox", "xmenfox", {rating:7.9, nonmcu:true, note:"Gabungin cast X-Men klasik & First Class, non-MCU"}, "https://z2.idlixku.com/movie/x-men-days-of-future-past-2014"],
+    ["Guardians of the Galaxy", "1 Agustus 2014", "Marvel Studios / Walt Disney Studios", "gotg", {rating:8, note:"Star-Lord dkk kumpul buat lindungin sebuah Infinity Stone"}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-2014"],
+    ["Agent Carter (Season 1)", "6 Januari 2015", "Marvel Television / ABC", "agentcarter", {rating:7.7, tvseries:true, note:"Peggy Carter pasca Captain America: The First Avenger"}, "https://z2.idlixku.com/movie/agent-carter-season-1-2015"],
+    ["Daredevil (Season 1)", "10 April 2015", "Marvel Television / Netflix", "daredevil", {rating:8.6, tvseries:true, note:"Matt Murdock versi Netflix, kini jadi kanon lewat Born Again"}, "https://z2.idlixku.com/movie/daredevil-season-1-2015"],
+    ["Avengers: Age of Ultron", "1 Mei 2015", "Marvel Studios / Walt Disney Studios", "avengers", {rating:7.3, note:"Avengers lawan Ultron — debut Quicksilver (MCU) cuma cameo, gak ada film solo"}, "https://z2.idlixku.com/movie/avengers-age-of-ultron-2015"],
+    ["Ant-Man", "17 Juli 2015", "Marvel Studios / Walt Disney Studios", "antman", {rating:7, note:"Scott Lang jadi Ant-Man, curi teknologi Pym Particle"}, "https://z2.idlixku.com/movie/ant-man-2015"],
+    ["Fantastic Four", "7 Agustus 2015", "20th Century Fox", "fantasticfourfox", {rating:4.3, nonmcu:true, note:"Reboot Fantastic Four versi Fox, non-MCU"}, "https://z2.idlixku.com/movie/fantastic-four-2015"],
+    ["Jessica Jones (Season 1)", "20 November 2015", "Marvel Television / Netflix", "jessicajones", {rating:8, tvseries:true, note:"Detektif eks-superhero trauma lawan Kilgrave"}, "https://z2.idlixku.com/movie/jessica-jones-season-1-2015"],
+    ["Deadpool", "12 Februari 2016", "20th Century Fox", "deadpoolfox", {rating:8, nonmcu:true, note:"Deadpool versi Fox sebelum masuk MCU, non-MCU"}, "https://z2.idlixku.com/movie/deadpool-2016"],
+    ["Captain America: Civil War", "6 Mei 2016", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Avengers pecah dua kubu gara-gara Sokovia Accords"}, "https://z2.idlixku.com/movie/captain-america-civil-war-2016"],
+    ["X-Men: Apocalypse", "27 Mei 2016", "20th Century Fox", "xmenfox", {rating:6.9, nonmcu:true, note:"Apocalypse bangkit, non-MCU"}, "https://z2.idlixku.com/movie/x-men-apocalypse-2016"],
+    ["Luke Cage (Season 1)", "30 September 2016", "Marvel Television / Netflix", "lukecage", {rating:7.7, tvseries:true, note:"Luke Cage jaga Harlem, non-MCU tapi sekarang mulai disebut kanon"}, "https://z2.idlixku.com/movie/luke-cage-season-1-2016"],
+    ["Doctor Strange", "4 November 2016", "Marvel Studios / Walt Disney Studios", "strange", {rating:7.5, note:"Asal-usul Stephen Strange jadi Sorcerer Supreme"}, "https://z2.idlixku.com/movie/doctor-strange-2016"],
+    ["Legion (Season 1)", "8 Februari 2017", "FX / Marvel Television", "legion", {rating:8.3, tvseries:true, nonmcu:true, note:"Anak Professor X, non-MCU, gaya cerita psikedelik"}, "https://z2.idlixku.com/movie/legion-season-1-2017"],
+    ["Logan", "3 Maret 2017", "20th Century Fox", "wolverine", {rating:8.1, nonmcu:true, note:"Perpisahan Wolverine versi Hugh Jackman, non-MCU"}, "https://z2.idlixku.com/movie/logan-2017"],
+    ["Iron Fist (Season 1)", "17 Maret 2017", "Marvel Television / Netflix", "ironfist", {rating:6.4, tvseries:true, note:"Danny Rand belajar bela diri di K'un-Lun"}, "https://z2.idlixku.com/movie/iron-fist-season-1-2017"],
+    ["Guardians of the Galaxy Vol. 2", "5 Mei 2017", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.6, note:"Star-Lord ketemu ayah kandungnya, Ego"}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-vol-2-2017"],
+    ["Spider-Man: Homecoming", "7 Juli 2017", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter debut resmi di MCU, dibimbing Tony Stark"}, "https://z2.idlixku.com/movie/spider-man-homecoming-2017"],
+    ["The Defenders", "18 Agustus 2017", "Marvel Television / Netflix", "defenders", {rating:7.9, tvseries:true, note:"Daredevil, Jessica Jones, Luke Cage & Iron Fist bersatu"}, "https://z2.idlixku.com/movie/the-defenders-2017"],
+    ["Inhumans", "29 September 2017", "Marvel Television / ABC", "inhumans", {rating:4.4, tvseries:true, note:"Kerajaan Inhuman di Bulan, jarang disebut lagi di MCU"}, "https://z2.idlixku.com/movie/inhumans-2017"],
+    ["The Gifted (Season 1)", "2 Oktober 2017", "20th Century Fox / FX", "gifted", {rating:7.1, tvseries:true, nonmcu:true, note:"Keluarga mutan kabur dari pemerintah, non-MCU"}, "https://z2.idlixku.com/movie/the-gifted-season-1-2017"],
+    ["Thor: Ragnarok", "3 November 2017", "Marvel Studios / Walt Disney Studios", "thor", {rating:7.9, note:"Thor kehilangan Asgard, lawan Hela"}, "https://z2.idlixku.com/movie/thor-ragnarok-2017"],
+    ["The Punisher (Season 1)", "17 November 2017", "Marvel Television / Netflix", "punisher", {rating:8.2, tvseries:true, note:"Frank Castle jalanin misi balas dendam sendiri"}, "https://z2.idlixku.com/movie/the-punisher-season-1-2017"],
+    ["Runaways (Season 1)", "21 November 2017", "Marvel Television / Hulu", "runaways", {rating:6.7, tvseries:true, note:"Sekelompok remaja temukan orang tua mereka penjahat rahasia"}, "https://z2.idlixku.com/movie/runaways-season-1-2017"],
+    ["Black Panther", "16 Februari 2018", "Marvel Studios / Walt Disney Studios", "panther", {rating:7.3, note:"T'Challa jadi raja Wakanda, lawan Killmonger"}, "https://z2.idlixku.com/movie/black-panther-2018"],
+    ["Avengers: Infinity War", "27 April 2018", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Thanos kumpulin semua Infinity Stone, setengah alam semesta lenyap"}, "https://z2.idlixku.com/movie/avengers-infinity-war-2018"],
+    ["Deadpool 2", "18 Mei 2018", "20th Century Fox", "deadpoolfox", {rating:7.7, nonmcu:true, note:"Deadpool versi Fox, kenalin Cable & X-Force, non-MCU"}, "https://z2.idlixku.com/movie/deadpool-2-2018"],
+    ["Cloak & Dagger (Season 1)", "7 Juni 2018", "Marvel Television / Freeform", "cloakdagger", {rating:7.1, tvseries:true, note:"Dua remaja dapat kekuatan cahaya & kegelapan"}, "https://z2.idlixku.com/movie/cloak-and-dagger-season-1-2018"],
+    ["Ant-Man and the Wasp", "6 Juli 2018", "Marvel Studios / Walt Disney Studios", "antman", {rating:7, note:"Scott bantu selamatkan Janet van Dyne dari Quantum Realm"}, "https://z2.idlixku.com/movie/ant-man-and-the-wasp-2018"],
+    ["Venom", "5 Oktober 2018", "Sony Pictures / Columbia Pictures", "venom", {rating:6.6, nonmcu:true, note:"Eddie Brock & simbiot Venom, universe Sony sendiri"}, "https://z2.idlixku.com/movie/venom-2018"],
+    ["Spider-Man: Into the Spider-Verse", "14 Desember 2018", "Sony Pictures Animation", "spiderverse", {rating:8.4, nonmcu:true, animation:true, note:"Miles Morales debut, animasi multiverse pemenang Oscar"}, "https://z2.idlixku.com/movie/spider-man-into-the-spider-verse-2018"],
+    ["Captain Marvel", "8 Maret 2019", "Marvel Studios / Walt Disney Studios", "marvel", {rating:6.8, note:"Carol Danvers dapat kekuatan kosmik, latar tahun 90-an"}, "https://z2.idlixku.com/movie/captain-marvel-2019"],
+    ["Avengers: Endgame", "26 April 2019", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Sisa Avengers coba balikin korban Snap-nya Thanos"}, "https://z2.idlixku.com/movie/avengers-endgame-2019"],
+    ["Dark Phoenix", "7 Juni 2019", "20th Century Fox", "xmenfox", {rating:5.7, nonmcu:true, note:"Penutup franchise X-Men versi Fox, non-MCU"}, "https://z2.idlixku.com/movie/dark-phoenix-2019"],
+    ["Spider-Man: Far From Home", "2 Juli 2019", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter hadapi Mysterio pasca Endgame"}, "https://z2.idlixku.com/movie/spider-man-far-from-home-2019"],
+    ["The New Mutants", "28 Agustus 2020", "20th Century Fox / Walt Disney Studios", "newmutants", {rating:5.5, nonmcu:true, note:"Spin-off horor X-Men, film terakhir era Fox, non-MCU"}, "https://z2.idlixku.com/movie/the-new-mutants-2020"],
+    ["WandaVision", "15 Januari 2021", "Marvel Studios / Disney+", "wandavision", {rating:7.9, tvseries:true, note:"Wajib nonton — nentuin arc Wanda yang dibawa ke Doctor Strange 2"}, "https://z2.idlixku.com/movie/wandavision-2021"],
+    ["The Falcon and the Winter Soldier", "19 Maret 2021", "Marvel Studios / Disney+", "falconwinter", {rating:7.3, tvseries:true, note:"Sam & Bucky hadapi Flag Smashers, isu soal siapa yang layak pegang perisai Cap"}, "https://z2.idlixku.com/movie/the-falcon-and-the-winter-soldier-2021"],
+    ["Loki (Season 1)", "9 Juni 2021", "Marvel Studios / Disney+", "loki", {rating:8.2, tvseries:true, note:"Wajib nonton — pembuka konsep multiverse & TVA"}, "https://z2.idlixku.com/movie/loki-season-1-2021"],
+    ["Black Widow", "9 Juli 2021", "Marvel Studios / Walt Disney Studios", "widow", {rating:6.7, note:"Natasha hadapi masa lalu Red Room, latar sebelum Infinity War"}, "https://z2.idlixku.com/movie/black-widow-2021"],
+    ["What If...?", "11 Agustus 2021", "Marvel Studios / Disney+", "whatif", {rating:7.4, tvseries:true, note:"Serial animasi multiverse, 3 season sampai 2024 — opsional tapi nyambung ke tema multiverse Doctor Strange 2 & Doomsday", animation:true}, "https://z2.idlixku.com/movie/what-if-2021"],
+    ["Shang-Chi and the Legend of the Ten Rings", "3 September 2021", "Marvel Studios / Walt Disney Studios", "shangchi", {rating:7.4, note:"Shang-Chi lawan ayahnya sendiri, pemegang Ten Rings"}, "https://z2.idlixku.com/movie/shang-chi-and-the-legend-of-the-ten-rings-2021"],
+    ["Venom: Let There Be Carnage", "1 Oktober 2021", "Sony Pictures / Columbia Pictures", "venom", {rating:5.9, nonmcu:true, note:"Venom lawan Carnage, universe Sony"}, "https://z2.idlixku.com/movie/venom-let-there-be-carnage-2021"],
+    ["Eternals", "5 November 2021", "Marvel Studios / Walt Disney Studios", "eternals", {rating:6.3, note:"Sekelompok makhluk abadi ciptaan Celestial mulai terungkap"}, "https://z2.idlixku.com/movie/eternals-2021"],
+    ["Hawkeye", "24 November 2021", "Marvel Studios / Disney+", "hawkeye", {rating:7.6, tvseries:true, note:"Ngenalin Yelena Belova, tokoh sentral di Thunderbolts*"}, "https://z2.idlixku.com/movie/hawkeye-2021"],
+    ["Spider-Man: No Way Home", "17 Desember 2021", "Marvel Studios / Sony Pictures", "spiderman", {rating:8.2, note:"Multiverse pecah, villain dari franchise Spider-Man lain muncul"}, "https://z2.idlixku.com/movie/spider-man-no-way-home-2021"],
+    ["Moon Knight", "30 Maret 2022", "Marvel Studios / Disney+", "moonknight", {rating:7.3, tvseries:true, note:"Marc Spector berbagi tubuh sama Steven Grant, terikat dewa Mesir Khonshu"}, "https://z2.idlixku.com/movie/moon-knight-2022"],
+    ["Morbius", "1 April 2022", "Sony Pictures / Columbia Pictures", "morbius", {rating:5.2, nonmcu:true, note:"Vampir super versi Sony, universe sendiri"}, "https://z2.idlixku.com/movie/morbius-2022"],
+    ["Doctor Strange in the Multiverse of Madness", "6 Mei 2022", "Marvel Studios / Walt Disney Studios", "strange", {rating:6.9, note:"Strange jelajahi multiverse buat lindungin America Chavez"}, "https://z2.idlixku.com/movie/doctor-strange-in-the-multiverse-of-madness-2022"],
+    ["Ms. Marvel", "8 Juni 2022", "Marvel Studios / Disney+", "msmarvel", {rating:6.5, tvseries:true, note:"Ngenalin Kamala Khan sebelum The Marvels"}, "https://z2.idlixku.com/movie/ms-marvel-2022"],
+    ["Thor: Love and Thunder", "8 Juli 2022", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.2, note:"Thor lawan Gorr the God Butcher bareng Jane Foster"}, "https://z2.idlixku.com/movie/thor-love-and-thunder-2022"],
+    ["She-Hulk: Attorney at Law", "18 Agustus 2022", "Marvel Studios / Disney+", "shehulk", {rating:5.3, tvseries:true, note:"Jennifer Walters dapat kekuatan Hulk, nada cerita lebih komedi hukum"}, "https://z2.idlixku.com/movie/she-hulk-attorney-at-law-2022"],
+    ["Black Panther: Wakanda Forever", "11 November 2022", "Marvel Studios / Walt Disney Studios", "panther", {rating:6.7, note:"Wakanda berduka & hadapi ancaman dari Talokan"}, "https://z2.idlixku.com/movie/black-panther-wakanda-forever-2022"],
+    ["Ant-Man and the Wasp: Quantumania", "17 Februari 2023", "Marvel Studios / Walt Disney Studios", "antman", {rating:6.1, note:"Keluarga Lang-Van Dyne kejebak di Quantum Realm, ketemu Kang"}, "https://z2.idlixku.com/movie/ant-man-and-the-wasp-quantumania-2023"],
+    ["Guardians of the Galaxy Vol. 3", "5 Mei 2023", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.9, note:"Perjalanan terakhir Guardians original, ungkap asal-usul Rocket"}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-vol-3-2023"],
+    ["Spider-Man: Across the Spider-Verse", "2 Juni 2023", "Sony Pictures Animation", "spiderverse", {rating:8.6, nonmcu:true, animation:true, note:"Miles jelajahi Spider Society, jadi buronan multiverse"}, "https://z2.idlixku.com/movie/spider-man-across-the-spider-verse-2023"],
+    ["Secret Invasion", "21 Juni 2023", "Marvel Studios / Disney+", "secretinvasion", {rating:5.8, tvseries:true, note:"Skrull yang menyamar jadi manusia mulai bikin kekacauan global"}, "https://z2.idlixku.com/movie/secret-invasion-2023"],
+    ["Loki (Season 2)", "6 Oktober 2023", "Marvel Studios / Disney+", "loki", {rating:8.3, tvseries:true, note:"Wajib nonton — Avengers: Doomsday itu sekuel langsung dari sini"}, "https://z2.idlixku.com/movie/loki-season-2-2023"],
+    ["The Marvels", "10 November 2023", "Marvel Studios / Walt Disney Studios", "marvel", {rating:5.5, note:"Carol, Kamala, & Monica Rambeau tukar tempat gara-gara kekuatan mereka nyambung"}, "https://z2.idlixku.com/movie/the-marvels-2023"],
+    ["Echo", "9 Januari 2024", "Marvel Studios / Disney+", "echo", {rating:6.5, tvseries:true, note:"Maya Lopez hadapi masa lalu & Kingpin, spin-off dari Hawkeye"}, "https://z2.idlixku.com/movie/echo-2024"],
+    ["Madame Web", "14 Februari 2024", "Sony Pictures / Columbia Pictures", "madameweb", {rating:4, nonmcu:true, note:"Universe Sony, gak nyambung MCU"}, "https://z2.idlixku.com/movie/madame-web-2024"],
+    ["Deadpool & Wolverine", "26 Juli 2024", "Marvel Studios / Walt Disney Studios", "deadpool", {rating:7.7, note:"Deadpool resmi masuk MCU, reunian sama Wolverine"}, "https://z2.idlixku.com/movie/deadpool-and-wolverine-2024"],
+    ["Agatha All Along", "18 September 2024", "Marvel Studios / Disney+", "agatha", {rating:6.9, tvseries:true, note:"Lanjutan dunia WandaVision, nyambung ke VisionQuest"}, "https://z2.idlixku.com/movie/agatha-all-along-2024"],
+    ["Venom: The Last Dance", "25 Oktober 2024", "Sony Pictures / Columbia Pictures", "venom", {rating:5.4, nonmcu:true, note:"Penutup trilogi Venom versi Sony"}, "https://z2.idlixku.com/movie/venom-the-last-dance-2024"],
+    ["Kraven the Hunter", "13 Desember 2024", "Sony Pictures / Columbia Pictures", "kraven", {rating:5.4, nonmcu:true, note:"Asal-usul Kraven the Hunter, universe Sony"}, "https://z2.idlixku.com/movie/kraven-the-hunter-2024"],
+    ["Captain America: Brave New World", "14 Februari 2025", "Marvel Studios / Walt Disney Studios", "cap", {rating:6, note:"Sam Wilson jadi Cap baru, hadapi konspirasi politik & Hulk merah"}, "https://z2.idlixku.com/movie/captain-america-brave-new-world-2025"],
+    ["Daredevil: Born Again", "4 Maret 2025", "Marvel Studios / Disney+", "daredevil", {rating:7.5, tvseries:true, note:"Matt Murdock balik jadi Daredevil, Kingpin jadi walikota New York"}, "https://z2.idlixku.com/movie/daredevil-born-again-2025"],
+    ["Thunderbolts*", "2 Mei 2025", "Marvel Studios / Walt Disney Studios", "thunderbolts", {rating:7.3, note:"Tim antihero 'sampah' MCU dipaksa kerja bareng"}, "https://z2.idlixku.com/movie/thunderbolts-2025"],
+    ["The Fantastic Four: First Steps", "25 Juli 2025", "Marvel Studios / Walt Disney Studios", "fantasticfour", {rating:7.5, note:"Fantastic Four debut MCU dari Earth-828, lawan Galactus"}, "https://z2.idlixku.com/movie/the-fantastic-four-first-steps-2025"],
     ["Spider-Man: Brand New Day", "31 Juli 2026", "Marvel Studios / Sony Pictures", "spiderman", {note:"Kelanjutan Peter pasca semua orang lupa identitasnya"}, "https://z2.idlixku.com/movie/spider-man-brand-new-day-2026"],
-    ["Avengers: Doomsday", "18 Desember 2026", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Beberapa tim Avengers dari universe berbeda ketemu Doctor Doom"}, ""],
-    ["Avengers: Secret Wars", "17 Desember 2027", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Puncak Multiverse Saga, kemungkinan reset besar-besaran MCU"}, ""],
+    ["Avengers: Doomsday", "18 Desember 2026", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Beberapa tim Avengers dari universe berbeda ketemu Doctor Doom"}, "https://z2.idlixku.com/movie/avengers-doomsday-2026"],
+    ["Spider-Man: Beyond the Spider-Verse", "18 Juni 2027", "Sony Pictures Animation", "spiderverse", {upcoming:true, nonmcu:true, animation:true, note:"Penutup trilogi animasi Miles Morales"}, "https://z2.idlixku.com/movie/spider-man-beyond-the-spider-verse-2027"],
+    ["Avengers: Secret Wars", "17 Desember 2027", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Puncak Multiverse Saga, kemungkinan reset besar-besaran MCU"}, "https://z2.idlixku.com/movie/avengers-secret-wars-2027"],
   ];
 
   const STORAGE_KEY = "marvel-checklist-state-v9";
@@ -526,7 +533,7 @@
     agentcarter: "Agent Carter", jessicajones: "Jessica Jones", lukecage: "Luke Cage",
     ironfist: "Iron Fist", defenders: "The Defenders", inhumans: "Inhumans",
     legion: "Legion", gifted: "The Gifted", runaways: "Runaways",
-    cloakdagger: "Cloak & Dagger",
+    cloakdagger: "Cloak & Dagger", spiderverse: "Spider-Verse",
   };
 
   // Storage layer: pakai window.storage kalau ada (di dalam Claude),
@@ -570,11 +577,13 @@
       const title = entry[0].toLowerCase();
       const isNonMcu = !!f.nonmcu;
       const isTv = !!f.tvseries;
+      const isAnimation = !!f.animation;
 
       let show = true;
       if(categoryFilter === "mcu") show = !isNonMcu && !isTv;
       else if(categoryFilter === "nonmcu") show = isNonMcu;
       else if(categoryFilter === "tvseries") show = isTv;
+      else if(categoryFilter === "animation") show = isAnimation;
 
       if(show && heroFilter !== "all") show = theme === heroFilter;
       if(show && searchQuery) show = title.indexOf(searchQuery) !== -1;
@@ -605,6 +614,7 @@
     document.querySelectorAll(".mc-item").forEach(el => {
       const isNonMcu = el.dataset.nonmcu === "1";
       const isTv = el.dataset.tvseries === "1";
+      const isAnimation = el.dataset.animation === "1";
       const theme = el.dataset.theme;
       const title = el.dataset.title || "";
 
@@ -612,6 +622,7 @@
       if(categoryFilter === "mcu") show = !isNonMcu && !isTv;
       else if(categoryFilter === "nonmcu") show = isNonMcu;
       else if(categoryFilter === "tvseries") show = isTv;
+      else if(categoryFilter === "animation") show = isAnimation;
 
       if(show && heroFilter !== "all") show = theme === heroFilter;
       if(show && searchQuery) show = title.indexOf(searchQuery) !== -1;
@@ -662,6 +673,7 @@
       row.style.setProperty("--item-bg", THEMES[theme] || THEMES.avengers);
       row.dataset.nonmcu = f.nonmcu ? "1" : "0";
       row.dataset.tvseries = f.tvseries ? "1" : "0";
+      row.dataset.animation = f.animation ? "1" : "0";
       row.dataset.theme = theme;
       row.dataset.title = title.toLowerCase();
 
@@ -674,6 +686,7 @@
               : `<span class="mc-item-title">${title}</span>`}
             ${f.nonmcu ? '<span class="mc-badge nonmcu">Non MCU</span>' : ""}
             ${f.tvseries ? '<span class="mc-badge tvseries">TV Series</span>' : ""}
+            ${f.animation ? '<span class="mc-badge animation">Animation</span>' : ""}
             ${f.upcoming ? '<span class="mc-badge upcoming">Belum rilis</span>' : ""}
           </div>
           <div class="mc-item-meta">${date} · ${studio}${f.rating != null ? " · ★ " + f.rating.toFixed(1) : ""}</div>
