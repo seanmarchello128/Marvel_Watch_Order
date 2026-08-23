@@ -4,7 +4,7 @@
 <link rel="icon" type="image/png" href="favicon-32.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
-<title>Avengers Watch Order</title>
+<title>Marvel Watch Order</title>
 <style>
   :root{
     --bg: #08080c;
@@ -35,6 +35,436 @@
   }
 
   .mc-ring-wrap{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 14px;
+    margin: 18px 0 22px;
+    padding: 14px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    flex-wrap: wrap;
+  }
+  .mc-ring{ position:relative; width:56px; height:56px; flex:none; }
+  .mc-ring svg{ transform: rotate(-90deg); }
+  .mc-ring circle{ fill:none; stroke-width: 6; }
+  .mc-ring .mc-ring-bg{ stroke:#26262f; }
+  .mc-ring .mc-ring-fg{ stroke: url(#mc-grad); stroke-linecap: round; transition: stroke-dashoffset .35s ease; }
+  .mc-ring-label{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size: 11px; font-weight:800; color: var(--ink);
+  }
+  .mc-ring-text{ font-size: 13px; color: var(--ink-dim); text-align:center; }
+  .mc-ring-text b{ color: var(--ink); font-size: 15px; }
+
+  .mc-panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+
+  .mc-search{ position: relative; margin-bottom: 12px; }
+  .mc-search svg{
+    position:absolute; left:12px; top:50%; transform:translateY(-50%);
+    width:15px; height:15px; opacity:0.5; pointer-events:none;
+  }
+  .mc-search input{
+    width:100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 16px;
+    padding: 11px 34px 11px 34px;
+    border-radius: 10px;
+    outline: none;
+    transition: border-color .15s ease;
+  }
+  .mc-search input::placeholder{ color: #6f6c7c; }
+  .mc-search input:focus{ border-color: var(--ink-dim); }
+  .mc-search-clear{
+    position:absolute; right:8px; top:50%; transform:translateY(-50%);
+    width:22px; height:22px; border:none; background:transparent;
+    color: var(--ink-dim); font-size:16px; line-height:1; cursor:pointer;
+    display:none; align-items:center; justify-content:center; border-radius:50%;
+  }
+  .mc-search-clear:hover{ color: var(--ink); background: rgba(255,255,255,0.08); }
+  .mc-search-clear.show{ display:flex; }
+
+  .mc-controls-row{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .mc-control{ flex: 1; min-width: 150px; }
+  .mc-control label{
+    display:block; color: var(--ink-dim); font-size: 10.5px; font-weight:800;
+    text-transform: uppercase; letter-spacing:0.4px; margin-bottom: 5px;
+  }
+  .mc-control select{
+    width:100%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 600;
+    padding: 10px 10px;
+    border-radius: 9px;
+    cursor: pointer;
+  }
+
+  .mc-filters{
+    display:flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+  .mc-chip{
+    background: var(--bg);
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 13px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .mc-chip.active{ background: var(--ink); color:#0c0c10; border-color: var(--ink); }
+  .mc-chip:hover:not(.active){ border-color: var(--ink-dim); color: var(--ink); }
+
+  .mc-result-count{
+    color: var(--ink-dim); font-size: 11.5px; margin: 2px 2px 12px;
+  }
+  .mc-empty{
+    text-align:center; color: var(--ink-dim); font-size: 13px;
+    padding: 30px 10px; border: 1px dashed var(--line); border-radius: 12px;
+  }
+
+  .mc-list{ display:flex; flex-direction:column; gap: 10px; }
+
+  .mc-item{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+    transition: opacity .2s ease, transform .15s ease;
+  }
+  .mc-item.hidden{ display:none; }
+  .mc-item::before{
+    content:"";
+    position:absolute; inset:0;
+    background: var(--item-bg);
+    opacity: 0.9;
+    z-index:0;
+  }
+  .mc-item::after{
+    content:"";
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.35) 100%);
+    z-index:0;
+  }
+  .mc-item.done{ opacity: 0.42; }
+
+  .mc-check-btn{
+    position:relative; z-index:1;
+    width: 30px; height:30px;
+    flex: none;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.75);
+    background: rgba(0,0,0,0.15);
+    cursor: pointer;
+    display:flex; align-items:center; justify-content:center;
+    padding:0;
+    transition: transform .18s cubic-bezier(.34,1.56,.64,1), background .15s ease;
+  }
+  .mc-check-btn.checked{
+    background: #fff;
+    transform: scale(1.12);
+  }
+  .mc-check-btn.checked::after{
+    content:"✓";
+    font-size: 15px;
+    font-weight: 900;
+    color: #111;
+  }
+
+  .mc-item-body{ position:relative; z-index:1; flex: 1; min-width:0; }
+  .mc-item-title-row{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .mc-item-title{
+    font-size: 15px;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .mc-item.done .mc-item-title{ text-decoration: line-through; }
+  a.mc-item-title{ text-decoration: none; cursor: pointer; }
+  a.mc-item-title:hover, a.mc-item-title:focus{ text-decoration: underline; }
+  .mc-item.done a.mc-item-title{ text-decoration: line-through; }
+  .mc-item-meta{
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .mc-item-note{
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .mc-badge{
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.4px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .mc-badge.nonmcu{ background: rgba(0,0,0,0.55); color: #fff; border: 1px solid rgba(255,255,255,0.5); }
+  .mc-badge.tvseries{ background: rgba(255,255,255,0.16); color: #fff; border: 1px solid rgba(255,255,255,0.55); }
+  .mc-badge.upcoming{ background: rgba(255,255,255,0.92); color: #111; }
+  .mc-badge.animation{ background: rgba(14,165,233,0.28); color: #fff; border: 1px solid rgba(14,165,233,0.7); }
+
+  .mc-reset{
+    display:block;
+    margin: 16px auto 0;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .mc-reset:hover{ border-color: var(--ink-dim); color: var(--ink); }
+
+  .mc-done-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    width:100%;
+    margin-top: 16px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 12.5px;
+    font-weight: 800;
+    padding: 11px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .mc-done-toggle:hover{ border-color: var(--ink-dim); color: var(--ink); }
+  .mc-done-toggle .mc-chev{ transition: transform .2s ease; font-size: 11px; }
+  .mc-done-toggle.open .mc-chev{ transform: rotate(180deg); }
+  .mc-list-done{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+  .mc-list-done.collapsed{ display:none; }
+
+  @keyframes mc-pop{
+    0%{ transform: scale(1); }
+    40%{ transform: scale(0.97); }
+    100%{ transform: scale(1); }
+  }
+  .mc-item.just-checked{ animation: mc-pop .3s ease; }
+
+  /* ===== Desktop ratio: layout lebih lebar, list 2 kolom ===== */
+  @media (min-width: 860px){
+    #mc-root{ max-width: 1080px; padding: 34px 28px 64px; }
+    .mc-hero h1{ font-size: 32px; }
+    .mc-ring-wrap{ padding: 18px 22px; }
+    .mc-panel{ padding: 18px 20px; }
+    .mc-controls-row{ flex-wrap: nowrap; }
+    .mc-list, .mc-list-done{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .mc-item{ padding: 14px 16px; }
+  }
+  @media (min-width: 1280px){
+    #mc-root{ max-width: 1320px; }
+    .mc-list, .mc-list-done{ grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* ===== Mobile ratio ===== */
+  @media (max-width: 420px){
+    #mc-root{ padding: 18px 10px 40px; }
+    .mc-hero h1{ font-size: 21px; }
+    .mc-item{ padding: 11px 12px; gap: 10px; }
+    .mc-item-title{ font-size: 13.5px; }
+    .mc-item-meta{ font-size: 10.5px; }
+    .mc-item-note{ font-size: 10px; }
+    .mc-ring-wrap{ gap:10px; padding:12px; }
+    .mc-panel{ padding: 12px; }
+    .mc-control{ min-width: 100%; }
+    .mc-chip{ padding: 7px 12px; }
+    .mc-badge{ font-size: 8.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="mc-root">
+  <div class="mc-hero">
+    <h1>Marvel Watch Order</h1>
+  </div>
+
+  <div class="mc-ring-wrap">
+    <div class="mc-ring">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <defs>
+          <linearGradient id="mc-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff5f5f"/>
+            <stop offset="50%" stop-color="#ffd23f"/>
+            <stop offset="100%" stop-color="#6fb3ff"/>
+          </linearGradient>
+        </defs>
+        <circle class="mc-ring-bg" cx="28" cy="28" r="23"></circle>
+        <circle class="mc-ring-fg" id="mc-ring-fg" cx="28" cy="28" r="23" stroke-dasharray="144.5" stroke-dashoffset="144.5"></circle>
+      </svg>
+      <div class="mc-ring-label" id="mc-ring-pct">0%</div>
+    </div>
+    <div class="mc-ring-text">Progress: <b id="mc-count-text">0/0</b> udah ditonton</div>
+  </div>
+
+  <div class="mc-panel">
+    <div class="mc-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" id="mc-search-input" placeholder="Cari judul film atau serial..." autocomplete="off">
+      <button class="mc-search-clear" id="mc-search-clear" aria-label="Hapus pencarian">×</button>
+    </div>
+
+    <div class="mc-controls-row">
+      <div class="mc-control">
+        <label for="mc-sort">Urutkan</label>
+        <select id="mc-sort">
+          <option value="default">Urutan rilis</option>
+          <option value="az">Judul (A-Z)</option>
+          <option value="year-desc">Tahun (baru-lama)</option>
+          <option value="year-asc">Tahun (lama-baru)</option>
+          <option value="rating">Rating (tertinggi)</option>
+        </select>
+      </div>
+      <div class="mc-control">
+        <label for="mc-hero-select">Hero</label>
+        <select id="mc-hero-select">
+          <option value="all">Semua Hero</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mc-filters">
+      <button class="mc-chip active" data-filter="all">Semua</button>
+      <button class="mc-chip" data-filter="mcu">MCU</button>
+      <button class="mc-chip" data-filter="nonmcu">Non MCU</button>
+      <button class="mc-chip" data-filter="tvseries">TV Series</button>
+      <button class="mc-chip" data-filter="animation">Animasi</button>
+    </div>
+  </div>
+
+  <div class="mc-result-count" id="mc-result-count"></div>
+
+  <div class="mc-list" id="mc-list"></div>
+  <div class="mc-empty" id="mc-empty" style="display:none;">Gak ada judul yang cocok. Coba kata kunci atau filter lain.</div>
+
+  <button class="mc-done-toggle" id="mc-done-toggle">
+    <span id="mc-done-toggle-label">Tampilkan yang sudah ditonton (0)</span>
+    <span class="mc-chev">▾</span>
+  </button>
+  <div class="mc-list-done collapsed" id="mc-list-done"></div>
+
+  <button class="mc-reset" id="mc-reset-btn">Reset semua centang</button>
+</div>
+
+<script>
+(function(){
+
+  const THEMES = {
+    spiderman:      "linear-gradient(135deg,#7f1d1d,#b91c1c 45%,#1d4ed8 100%)",
+    ironman:        "linear-gradient(135deg,#7f1d1d,#b91c1c 45%,#c9a227 100%)",
+    hulk:           "linear-gradient(135deg,#052e1c,#166534 50%,#4ade80 100%)",
+    thor:           "linear-gradient(135deg,#1e2a5e,#2b4fa8 50%,#d4af37 100%)",
+    cap:            "linear-gradient(135deg,#0b2447,#19376d 50%,#c1121f 100%)",
+    avengers:       "linear-gradient(135deg,#1a1a2e,#3b3b58 50%,#9aa5b1 100%)",
+    gotg:           "linear-gradient(135deg,#7c2d12,#c2410c 50%,#14b8a6 100%)",
+    antman:         "linear-gradient(135deg,#450a0a,#991b1b 50%,#c0c0c0 100%)",
+    strange:        "linear-gradient(135deg,#3b0764,#7f1d1d 50%,#d4af37 100%)",
+    panther:        "linear-gradient(135deg,#1a0b2e,#3b0764 50%,#a855f7 100%)",
+    marvel:         "linear-gradient(135deg,#0b1f3a,#1d4ed8 50%,#facc15 100%)",
+    widow:          "linear-gradient(135deg,#0a0a0a,#3f0d0d 50%,#b91c1c 100%)",
+    shangchi:       "linear-gradient(135deg,#3f0d0d,#b91c1c 50%,#d4af37 100%)",
+    eternals:       "linear-gradient(135deg,#3b2f0a,#8a6d1d 50%,#f5d67e 100%)",
+    deadpool:       "linear-gradient(135deg,#3f0d12,#7f1d2b 50%,#facc15 100%)",
+    thunderbolts:   "linear-gradient(135deg,#18181b,#3f3f46 50%,#7e22ce 100%)",
+    fantasticfour:  "linear-gradient(135deg,#0b1f3a,#1d4ed8 50%,#9ca3af 100%)",
+    wandavision:    "linear-gradient(135deg,#450a0a,#7f1d1d 45%,#15803d 100%)",
+    falconwinter:   "linear-gradient(135deg,#7f1d1d,#1e3a8a 50%,#cbd5e1 100%)",
+    loki:           "linear-gradient(135deg,#052e16,#15803d 50%,#ca8a04 100%)",
+    hawkeye:        "linear-gradient(135deg,#2e1065,#6d28d9 50%,#b91c1c 100%)",
+    msmarvel:       "linear-gradient(135deg,#4c0519,#be185d 50%,#0ea5e9 100%)",
+    agatha:         "linear-gradient(135deg,#1a0b2e,#6b21a8 50%,#4ade80 100%)",
+    moonknight:     "linear-gradient(135deg,#0f172a,#475569 50%,#e2e8f0 100%)",
+    shehulk:        "linear-gradient(135deg,#14532d,#4ade80 50%,#a78bfa 100%)",
+    secretinvasion: "linear-gradient(135deg,#0a0a0a,#14532d 50%,#65a30d 100%)",
+    echo:           "linear-gradient(135deg,#450a0a,#991b1b 50%,#1c1917 100%)",
+    daredevil:      "linear-gradient(135deg,#1c1917,#7f1d1d 50%,#dc2626 100%)",
+    whatif:         "linear-gradient(135deg,#1e1b4b,#4338ca 50%,#facc15 100%)",
+    xmenfox:        "linear-gradient(135deg,#0b1f3a,#1e3a5f 50%,#94a3b8 100%)",
+    wolverine:      "linear-gradient(135deg,#78350f,#b45309 50%,#1e3a8a 100%)",
+    blade:          "linear-gradient(135deg,#1a0000,#7f1d1d 50%,#450a0a 100%)",
+    elektra:        "linear-gradient(135deg,#3f0d12,#7f1d2b 50%,#1a0a0a 100%)",
+    fantasticfourfox:"linear-gradient(135deg,#1e3a5f,#2563eb 50%,#cbd5e1 100%)",
+    ghostrider:     "linear-gradient(135deg,#1a1a1a,#7c2d12 50%,#f97316 100%)",
+    punisher:       "linear-gradient(135deg,#0a0a0a,#3f3f46 50%,#d4d4d8 100%)",
+    deadpoolfox:    "linear-gradient(135deg,#3f0d12,#7f1d2b 50%,#dc2626 100%)",
+    venom:          "linear-gradient(135deg,#0a0a0a,#1a0000 50%,#b91c1c 100%)",
+    morbius:        "linear-gradient(135deg,#0a0a0a,#1e1b4b 50%,#7c3aed 100%)",
+    kraven:         "linear-gradient(135deg,#1a2e05,#4d7c0f 50%,#a16207 100%)",
+    madameweb:      "linear-gradient(135deg,#3f0d12,#7c3aed 50%,#be185d 100%)",
+    newmutants:     "linear-gradient(135deg,#1e1b4b,#4c1d95 50%,#a78bfa 100%)",
+    shield:         "linear-gradient(135deg,#0b1f3a,#1e3a8a 50%,#93c5fd 100%)",
+    agentcarter:    "linear-gradient(135deg,#4c0519,#9f1239 50%,#d4af37 100%)",
+    jessicajones:   "linear-gradient(135deg,#1e1b2e,#4c1d95 50%,#7e22ce 100%)",
+    lukecage:       "linear-gradient(135deg,#000000,#1c1917 50%,#eab308 100%)",
+    ironfist:       "linear-gradient(135deg,#052e16,#15803d 50%,#facc15 100%)",
+    defenders:      "linear-gradient(135deg,#0a0a0a,#292524 50%,#57534e 100%)",
+    inhumans:       "linear-gradient(135deg,#0b1120,#1e3a8a 50%,#60a5fa 100%)",
+    legion:         "linear-gradient(135deg,#3b0764,#a855f7 50%,#facc15 100%)",
+    gifted:         "linear-gradient(135deg,#1e1b4b,#4338ca 50%,#818cf8 100%)",
+    runaways:       "linear-gradient(135deg,#3b0764,#a21caf 50%,#f472b6 100%)",
+    cloakdagger:    "linear-gradient(135deg,#0a0a0a,#1e293b 50%,#e2e8f0 100%)",
+    spiderverse:    "linear-gradient(135deg,#3b0764,#b91c1c 50%,#0ea5e9 100%)",
+    wonderman:      "linear-gradient(135deg,#7f1d1d,#b91c1c 50%,#facc15 100%)",
+    ironheart:      "linear-gradient(135deg,#1e3a8a,#2563eb 50%,#dc2626 100%)",
+    zombies:        "linear-gradient(135deg,#052e12,#166534 50%,#7f1d1d 100%)",
+  };
+
+  // Format link: MOVIE -> https://domain/movie/judul-tahun | SERIES -> https://domain/series/judul-tahun
+  // title, date, studio, themeKey, flags: {nonmcu, tvseries, animation, upcoming, rating, note}, link (isi sendiri, "" kalau belum ada)
+  const DATA = [
+    ["X-Men", "14 Juli 2000", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Pembuka franchise X-Men versi Fox"}, "https://z2.idlixku.com/movie/x-men-2000"],
+    ["Blade II", "22 Maret 2002", "New Line Cinema", "blade", {rating:6.7, nonmcu:true, note:"Blade lawan vampir mutan Reaper"}, "https://z2.idlixku.com/movie/blade-ii-2002"],
+    ["Spider-Man", "3 Mei 2002", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.4, nonmcu:true, note:"Origin Peter Parker versi Sam Raimi"}, "https://z2.idlixku.com/movie/spider-man-2002"],
+    ["Daredevil", "14 Februari 2003", "20th Century Fox", "daredevil", {rating:5.3, nonmcu:true, note:"Versi awal Daredevil sebelum Netflix/Disney+"}, "https://z2.idlixku.com/movie/daredevil-2003"],
+    ["X2: X-Men United", "2 Mei 2003", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Dianggap salah satu X-Men terbaik era Fox"}, "https://z2.idlixku.com/movie/x2-x-men-united-2003"],
+    ["Hulk", "20 Juni 2003", "Universal Pictures", "hulk", {rating:5.6, nonmcu:true, note:"Versi Ang Lee, beda total dari MCU"}, "https://z2.idlixku.com/movie/hulk-2003"],
+    ["Spider-Man 2", "30 Juni 2004", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.5, nonmcu:true, note:"Peter jaga identitas rahasia lawan Doc Ock"}, "https://z2.idlixku.com/movie/spider-man-2-2004"],
+    ["Blade: Trinity", "8 Desember 2004", "New Line Cinema", "blade", {rating:5.9, nonmcu:true, note:"Penutup trilogi Blade"}, "https://z2.idlixku.com/movie/blade-trinity-2004"],
+    ["Elektra", "14 Januari 2005", "20th Century Fox", "elektra", {rating:4.7, nonmcu:true, note:"Spin-off dari Daredevil 2003"}, "https://z2.idlixku.com/movie/elektra-2005"],
+    ["Fantastic Four", "8 Juli 2005", "20th Century Fox", "fantasticfourfox", {rating:5.7, nonmcu:true, note:"Versi Fox"}, "https://z2.idlixku.com/movie/fantastic-four-2005"],
+    ["X-Men: The Last Stand", "26 Mei 2006", "20th Century Fox", "xmenfox", {rating:6.8, nonmcu:true, note:"Dark Phoenix Saga versi pertama"}, "https://z2.idlixku.com/movie/x-men-the-last-stand-2006"],
+    ["Ghost Rider", "16 Februari 2007", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:5.2, nonmcu:true, note:"Nicolas Cage jadi Johnny Blaze"}, "https://z2.idlixku.com/movie/ghost-rider-2007"],
+    ["Spider-Man 3", "4 Mei 2007", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.3, nonmcu:true, note:"Venom masuk cerita, film terlemah trilogi Raimi"}, "https://z2.idlixku.com/movie/spider-man-3-2007"],
+    ["Fantastic Four: Rise of the Silver Surfer", "15 Juni 2007", "20th Century Fox", "fantasticfourfox", {rating:5.6, nonmcu:true, note:"Sekuel Fantastic Four versi Fox"}, "https://z2.idlixku.com/movie/fantastic-four-rise-of-the-silver-surfer-2007"],
+    ["Iron Man", "2 Mei 2008", "Marvel Studios / Paramount Pictures", "ironman", {rating:7.9, note:"Film pembuka MCU"}, "https://z2.  .mc-ring-wrap{
     display:flex;
     align-items:center;
     justify-content:center;
