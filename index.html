@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <link rel="icon" type="image/png" href="mwo logo.png">
 <meta charset="UTF-8">
@@ -275,7 +275,7 @@
   }
   .mc-item.just-checked{ animation: mc-pop .3s ease; }
 
-  /* ===== Desktop ratio: layout lebih lebar, list 2 kolom ===== */
+  /* ===== Desktop ratio: wider layout, 2-column list ===== */
   @media (min-width: 860px){
     #mc-root{ max-width: 1080px; padding: 34px 28px 64px; }
     .mc-hero h1{ font-size: 32px; }
@@ -332,56 +332,56 @@
       </svg>
       <div class="mc-ring-label" id="mc-ring-pct">0%</div>
     </div>
-    <div class="mc-ring-text">Progress: <b id="mc-count-text">0/0</b> udah ditonton</div>
+    <div class="mc-ring-text">Progress: <b id="mc-count-text">0/0</b> watched</div>
   </div>
 
   <div class="mc-panel">
     <div class="mc-search">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="search" id="mc-search-input" placeholder="Cari judul film atau serial..." autocomplete="off">
-      <button class="mc-search-clear" id="mc-search-clear" aria-label="Hapus pencarian">×</button>
+      <input type="search" id="mc-search-input" placeholder="Search for a movie or series title..." autocomplete="off">
+      <button class="mc-search-clear" id="mc-search-clear" aria-label="Clear search">×</button>
     </div>
 
     <div class="mc-controls-row">
       <div class="mc-control">
-        <label for="mc-sort">Urutkan</label>
+        <label for="mc-sort">Sort by</label>
         <select id="mc-sort">
-          <option value="default">Urutan rilis</option>
-          <option value="az">Judul (A-Z)</option>
-          <option value="year-desc">Tahun (baru-lama)</option>
-          <option value="year-asc">Tahun (lama-baru)</option>
-          <option value="rating">Rating (tertinggi)</option>
+          <option value="default">Release order</option>
+          <option value="az">Title (A-Z)</option>
+          <option value="year-desc">Year (newest first)</option>
+          <option value="year-asc">Year (oldest first)</option>
+          <option value="rating">Rating (highest)</option>
         </select>
       </div>
       <div class="mc-control">
         <label for="mc-hero-select">Hero</label>
         <select id="mc-hero-select">
-          <option value="all">Semua Hero</option>
+          <option value="all">All Heroes</option>
         </select>
       </div>
     </div>
 
     <div class="mc-filters">
-      <button class="mc-chip active" data-filter="all">Semua</button>
+      <button class="mc-chip active" data-filter="all">All</button>
       <button class="mc-chip" data-filter="mcu">MCU</button>
-      <button class="mc-chip" data-filter="nonmcu">Non MCU</button>
+      <button class="mc-chip" data-filter="nonmcu">Non-MCU</button>
       <button class="mc-chip" data-filter="tvseries">TV Series</button>
-      <button class="mc-chip" data-filter="animation">Animasi</button>
+      <button class="mc-chip" data-filter="animation">Animated</button>
     </div>
   </div>
 
   <div class="mc-result-count" id="mc-result-count"></div>
 
   <div class="mc-list" id="mc-list"></div>
-  <div class="mc-empty" id="mc-empty" style="display:none;">Gak ada judul yang cocok. Coba kata kunci atau filter lain.</div>
+  <div class="mc-empty" id="mc-empty" style="display:none;">No titles match. Try a different keyword or filter.</div>
 
   <button class="mc-done-toggle" id="mc-done-toggle">
-    <span id="mc-done-toggle-label">Tampilkan yang sudah ditonton (0)</span>
+    <span id="mc-done-toggle-label">Show watched (0)</span>
     <span class="mc-chev">▾</span>
   </button>
   <div class="mc-list-done collapsed" id="mc-list-done"></div>
 
-  <button class="mc-reset" id="mc-reset-btn">Reset semua centang</button>
+  <button class="mc-reset" id="mc-reset-btn">Reset all checkmarks</button>
 </div>
 
 <script>
@@ -447,131 +447,131 @@
     zombies:        "linear-gradient(135deg,#052e12,#166534 50%,#7f1d1d 100%)",
   };
 
-  // Format link: MOVIE -> https://domain/movie/judul-tahun | SERIES -> https://domain/series/judul-tahun
-  // title, date, studio, themeKey, flags: {nonmcu, tvseries, animation, upcoming, rating, note}, link (isi sendiri, "" kalau belum ada)
+  // Link format: MOVIE -> https://domain/movie/title-year | SERIES -> https://domain/series/title-year
+  // title, date, studio, themeKey, flags: {nonmcu, tvseries, animation, upcoming, rating, note}, link (fill in yourself, "" if not yet available)
   const DATA = [
-    ["Blade", "21 Agustus 1998", "New Line Cinema", "blade", {rating:7.1, nonmcu:true, note:"Film pembuka trilogi Blade, base awal karakter Blade Marvel di layar lebar"}, "https://z2.idlixku.com/movie/blade-1998"],
-    ["X-Men", "14 Juli 2000", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Pembuka franchise X-Men versi Fox"}, "https://z2.idlixku.com/movie/x-men-2000"],
-    ["Blade II", "22 Maret 2002", "New Line Cinema", "blade", {rating:6.7, nonmcu:true, note:"Blade lawan vampir mutan Reaper"}, "https://z2.idlixku.com/movie/blade-ii-2002"],
-    ["Spider-Man", "3 Mei 2002", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.4, nonmcu:true, note:"Origin Peter Parker versi Sam Raimi"}, "https://z2.idlixku.com/movie/spider-man-2002"],
-    ["Daredevil", "14 Februari 2003", "20th Century Fox", "daredevil", {rating:5.3, nonmcu:true, note:"Versi awal Daredevil sebelum Netflix/Disney+"}, "https://z2.idlixku.com/movie/daredevil-2003"],
-    ["X2: X-Men United", "2 Mei 2003", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Dianggap salah satu X-Men terbaik era Fox"}, "https://z2.idlixku.com/movie/x2-2003"],
-    ["Hulk", "20 Juni 2003", "Universal Pictures", "hulk", {rating:5.6, nonmcu:true, note:"Versi Ang Lee, beda total dari MCU"}, "https://z2.idlixku.com/movie/hulk-2003"],
-    ["Spider-Man 2", "30 Juni 2004", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.5, nonmcu:true, note:"Peter jaga identitas rahasia lawan Doc Ock"}, "https://z2.idlixku.com/movie/spider-man-2-2004"],
-    ["Blade: Trinity", "8 Desember 2004", "New Line Cinema", "blade", {rating:5.9, nonmcu:true, note:"Penutup trilogi Blade"}, "https://z2.idlixku.com/movie/blade-trinity-2004"],
-    ["Elektra", "14 Januari 2005", "20th Century Fox", "elektra", {rating:4.7, nonmcu:true, note:"Spin-off dari Daredevil 2003"}, "https://z2.idlixku.com/movie/elektra-2005"],
-    ["Fantastic Four", "8 Juli 2005", "20th Century Fox", "fantasticfourfox", {rating:5.7, nonmcu:true, note:"Versi Fox"}, "https://z2.idlixku.com/movie/fantastic-four-2005"],
-    ["X-Men: The Last Stand", "26 Mei 2006", "20th Century Fox", "xmenfox", {rating:6.8, nonmcu:true, note:"Dark Phoenix Saga versi pertama"}, "https://z2.idlixku.com/movie/x-men-the-last-stand-2006"],
-    ["Ghost Rider", "16 Februari 2007", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:5.2, nonmcu:true, note:"Nicolas Cage jadi Johnny Blaze"}, "https://z2.idlixku.com/movie/ghost-rider-2007"],
-    ["Spider-Man 3", "4 Mei 2007", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.3, nonmcu:true, note:"Venom masuk cerita, film terlemah trilogi Raimi"}, "https://z2.idlixku.com/movie/spider-man-3-2007"],
-    ["Fantastic Four: Rise of the Silver Surfer", "15 Juni 2007", "20th Century Fox", "fantasticfourfox", {rating:5.6, nonmcu:true, note:"Sekuel Fantastic Four versi Fox"}, "https://z2.idlixku.com/movie/fantastic-four-rise-of-the-silver-surfer-2007"],
-    ["Iron Man", "2 Mei 2008", "Marvel Studios / Paramount Pictures", "ironman", {rating:7.9, note:"Film pembuka MCU"}, "https://z2.idlixku.com/movie/iron-man-2008"],
-    ["The Incredible Hulk", "13 Juni 2008", "Marvel Studios / Universal Pictures", "hulk", {rating:6.6, note:"Reboot Hulk versi MCU"}, "https://z2.idlixku.com/movie/the-incredible-hulk-2008"],
-    ["Punisher: War Zone", "5 Desember 2008", "Lionsgate", "punisher", {rating:5.4, nonmcu:true, note:"Reboot Punisher"}, "https://z2.idlixku.com/movie/punisher-war-zone-2008"],
-    ["X-Men Origins: Wolverine", "1 Mei 2009", "20th Century Fox", "wolverine", {rating:6.0, nonmcu:true, note:"Asal-usul Wolverine versi Fox"}, "https://z2.idlixku.com/movie/x-men-origins-wolverine-2009"],
-    ["Iron Man 2", "7 Mei 2010", "Marvel Studios / Paramount Pictures", "ironman", {rating:6.9, note:"Tony hadapi keracunan palladium & Whiplash"}, "https://z2.idlixku.com/movie/iron-man-2-2010"],
-    ["Thor", "6 Mei 2011", "Marvel Studios / Paramount Pictures", "thor", {rating:7.0, note:"Perkenalan Asgard"}, "https://z2.idlixku.com/movie/thor-2011"],
-    ["X-Men: First Class", "3 Juni 2011", "20th Century Fox", "xmenfox", {rating:7.7, nonmcu:true, note:"Reboot timeline X-Men, era 60-an"}, "https://z2.idlixku.com/movie/x-men-first-class-2011"],
-    ["Captain America: The First Avenger", "22 Juli 2011", "Marvel Studios / Paramount Pictures", "cap", {rating:6.9, note:"Asal-usul Steve Rogers era PD II"}, "https://z2.idlixku.com/movie/captain-america-the-first-avenger-2011"],
-    ["Ghost Rider: Spirit of Vengeance", "11 Desember 2011", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:4.3, nonmcu:true, note:"Sekuel Ghost Rider"}, "https://z2.idlixku.com/movie/ghost-rider-spirit-of-vengeance-2011"],
-    ["The Avengers", "4 Mei 2012", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.0, note:"Tim Avengers pertama bersatu lawan Loki"}, "https://z2.idlixku.com/movie/the-avengers-2012"],
-    ["The Amazing Spider-Man", "3 Juli 2012", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.9, nonmcu:true, note:"Reboot Spider-Man versi Andrew Garfield"}, "https://z2.idlixku.com/movie/the-amazing-spider-man-2012"],
-    ["Iron Man 3", "3 Mei 2013", "Marvel Studios / Walt Disney Studios", "ironman", {rating:7.1, note:"Tony hadapi trauma pasca New York"}, "https://z2.idlixku.com/movie/iron-man-3-2013"],
-    ["The Wolverine", "25 Juli 2013", "20th Century Fox", "wolverine", {rating:6.7, nonmcu:true, note:"Logan di Jepang"}, "https://z2.idlixku.com/movie/the-wolverine-2013"],
-    ["Marvel's Agents of S.H.I.E.L.D. (Season 1)", "24 September 2013", "ABC / Marvel Television", "shield", {rating:7.3, tvseries:true, note:"Coulson bentuk tim SHIELD pasca Avengers"}, "https://z2.idlixku.com/series/marvels-agents-of-shield-2013"],
-    ["Thor: The Dark World", "8 November 2013", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.6, note:"Thor lawan Malekith"}, "https://z2.idlixku.com/movie/thor-the-dark-world-2013"],
-    ["Captain America: The Winter Soldier", "4 April 2014", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"HYDRA menyusup ke SHIELD"}, "https://z2.idlixku.com/movie/captain-america-the-winter-soldier-2014"],
-    ["The Amazing Spider-Man 2", "2 Mei 2014", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.6, nonmcu:true, note:"Peter lawan Electro"}, "https://z2.idlixku.com/movie/the-amazing-spider-man-2-2014"],
-    ["X-Men: Days of Future Past", "23 Mei 2014", "20th Century Fox", "xmenfox", {rating:7.9, nonmcu:true, note:"Gabungan cast X-Men original & First Class"}, "https://z2.idlixku.com/movie/x-men-days-of-future-past-2014"],
-    ["Guardians of the Galaxy", "1 Agustus 2014", "Marvel Studios / Walt Disney Studios", "gotg", {rating:8.0, note:"Star-Lord dkk lindungin Infinity Stone"}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-2014"],
-    ["Marvel's Agent Carter (Season 1)", "6 Januari 2015", "ABC / Marvel Television", "agentcarter", {rating:7.7, tvseries:true, note:"Peggy Carter pasca Perang Dunia II"}, "https://z2.idlixku.com/series/marvels-agent-carter-2015"],
-    ["Daredevil (Season 1)", "10 April 2015", "Netflix / Marvel Television", "daredevil", {rating:8.6, tvseries:true, note:"Matt Murdock jaga Hell's Kitchen"}, "https://z2.idlixku.com/series/marvels-daredevil-2015"],
-    ["Avengers: Age of Ultron", "1 Mei 2015", "Marvel Studios / Walt Disney Studios", "avengers", {rating:7.3, note:"Avengers lawan Ultron"}, "https://z2.idlixku.com/movie/avengers-age-of-ultron-2015"],
-    ["Ant-Man", "17 Juli 2015", "Marvel Studios / Walt Disney Studios", "antman", {rating:7.0, note:"Scott Lang jadi Ant-Man"}, "https://z2.idlixku.com/movie/ant-man-2015"],
-    ["Fantastic Four", "7 Agustus 2015", "20th Century Fox", "fantasticfourfox", {rating:4.3, nonmcu:true, note:"Reboot Fantastic Four versi Fox"}, "https://z2.idlixku.com/movie/fantastic-four-2015"],
-    ["Jessica Jones (Season 1)", "20 November 2015", "Netflix / Marvel Television", "jessicajones", {rating:8.2, tvseries:true, note:"Jessica Jones hadapi Kilgrave"}, "https://z2.idlixku.com/series/marvels-jessica-jones-2015"],
-    ["Deadpool", "12 Februari 2016", "20th Century Fox", "deadpoolfox", {rating:8.0, nonmcu:true, note:"Debut Deadpool versi Fox"}, "https://z2.idlixku.com/movie/deadpool-2016"],
-    ["Daredevil (Season 2)", "18 Maret 2016", "Netflix / Marvel Television", "daredevil", {rating:8.6, tvseries:true, note:"Punisher & Elektra masuk cerita"}, "https://z2.idlixku.com/series/marvels-daredevil-2015"],
-    ["Captain America: Civil War", "6 Mei 2016", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"Avengers pecah dua kubu"}, "https://z2.idlixku.com/movie/captain-america-civil-war-2016"],
-    ["X-Men: Apocalypse", "27 Mei 2016", "20th Century Fox", "xmenfox", {rating:6.9, nonmcu:true, note:"Villain purba Apocalypse bangkit"}, "https://z2.idlixku.com/movie/x-men-apocalypse-2016"],
-    ["Luke Cage (Season 1)", "30 September 2016", "Netflix / Marvel Television", "lukecage", {rating:8.0, tvseries:true, note:"Luke Cage jaga Harlem"}, "https://z2.idlixku.com/series/marvels-luke-cage-2016"],
-    ["Doctor Strange", "4 November 2016", "Marvel Studios / Walt Disney Studios", "strange", {rating:7.5, note:"Asal-usul Stephen Strange"}, "https://z2.idlixku.com/movie/doctor-strange-2016"],
-    ["Legion (Season 1)", "8 Februari 2017", "FX / Marvel Television", "legion", {rating:8.4, nonmcu:true, tvseries:true, note:"David Haller & sisi X-Men yang lebih psikedelik"}, "https://z2.idlixku.com/series/legion-2017"],
-    ["Iron Fist (Season 1)", "17 Maret 2017", "Netflix / Marvel Television", "ironfist", {rating:6.4, tvseries:true, note:"Danny Rand kembali dari K'un-Lun"}, "https://z2.idlixku.com/series/marvels-iron-fist-2017"],
-    ["Guardians of the Galaxy Vol. 2", "5 Mei 2017", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.6, note:"Star-Lord ketemu ayahnya, Ego"}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-vol-2-2017"],
-    ["Spider-Man: Homecoming", "7 Juli 2017", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter debut resmi di MCU"}, "https://z2.idlixku.com/movie/spider-man-homecoming-2017"],
-    ["The Defenders", "18 Agustus 2017", "Netflix / Marvel Television", "defenders", {rating:7.6, tvseries:true, note:"Daredevil, Jessica Jones, Luke Cage, Iron Fist bersatu"}, "https://z2.idlixku.com/series/marvels-the-defenders-2017"],
-    ["The Gifted (Season 1)", "2 Oktober 2017", "20th Century Fox", "gifted", {rating:7.1, nonmcu:true, tvseries:true, note:"Keluarga mutan buron pemerintah"}, "https://z2.idlixku.com/series/the-gifted-2017"],
-    ["Inhumans", "29 September 2017", "ABC / Marvel Television", "inhumans", {rating:4.4, tvseries:true, note:"Black Bolt & keluarga kerajaan Inhuman"}, "https://z2.idlixku.com/series/marvels-inhumans-2017"],
-    ["Thor: Ragnarok", "3 November 2017", "Marvel Studios / Walt Disney Studios", "thor", {rating:7.9, note:"Thor lawan Hela"}, "https://z2.idlixku.com/movie/thor-ragnarok-2017"],
-    ["The Punisher (Season 1)", "17 November 2017", "Netflix / Marvel Television", "punisher", {rating:8.5, tvseries:true, note:"Frank Castle balas dendam"}, "https://z2.idlixku.com/series/marvels-the-punisher-2017"],
-    ["Marvel's Runaways (Season 1)", "21 November 2017", "Hulu / Marvel Television", "runaways", {rating:6.7, tvseries:true, note:"Sekelompok remaja sadar orang tuanya penjahat"}, "https://z2.idlixku.com/series/marvels-runaways-2017"],
-    ["Black Panther", "16 Februari 2018", "Marvel Studios / Walt Disney Studios", "panther", {rating:7.3, note:"T'Challa jadi raja Wakanda"}, "https://z2.idlixku.com/movie/black-panther-2018"],
-    ["Jessica Jones (Season 2)", "8 Maret 2018", "Netflix / Marvel Television", "jessicajones", {rating:7.2, tvseries:true, note:"Jessica gali asal-usul kekuatannya"}, "https://z2.idlixku.com/series/marvels-jessica-jones-2015"],
-    ["Cloak & Dagger (Season 1)", "7 Juni 2018", "Freeform / Marvel Television", "cloakdagger", {rating:6.7, tvseries:true, note:"Dua remaja dengan kekuatan berlawanan"}, "https://z2.idlixku.com/series/marvels-cloak-and-dagger-2018"],
-    ["Deadpool 2", "18 Mei 2018", "20th Century Fox", "deadpoolfox", {rating:7.6, nonmcu:true, note:"Deadpool bentuk X-Force"}, "https://z2.idlixku.com/movie/deadpool-2-2018"],
-    ["Avengers: Infinity War", "27 April 2018", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Thanos kumpulin semua Infinity Stone"}, "https://z2.idlixku.com/movie/avengers-infinity-war-2018"],
-    ["Luke Cage (Season 2)", "22 Juni 2018", "Netflix / Marvel Television", "lukecage", {rating:7.5, tvseries:true, note:"Luke lawan Bushmaster"}, "https://z2.idlixku.com/series/marvels-luke-cage-2016"],
-    ["Ant-Man and the Wasp", "6 Juli 2018", "Marvel Studios / Walt Disney Studios", "antman", {rating:7.0, note:"Selamatkan Janet van Dyne dari Quantum Realm"}, "https://z2.idlixku.com/movie/ant-man-and-the-wasp-2018"],
-    ["Iron Fist (Season 2)", "7 September 2018", "Netflix / Marvel Television", "ironfist", {rating:6.1, tvseries:true, note:"Danny hadapi ancaman baru di New York"}, "https://z2.idlixku.com/series/marvels-iron-fist-2017"],
-    ["Venom", "5 Oktober 2018", "Sony Pictures", "venom", {rating:6.6, nonmcu:true, note:"Eddie Brock bersimbiosis dengan Venom"}, "https://z2.idlixku.com/movie/venom-2018"],
-    ["Daredevil (Season 3)", "19 Oktober 2018", "Netflix / Marvel Television", "daredevil", {rating:8.7, tvseries:true, note:"Wilson Fisk kembali sebagai musuh utama"}, "https://z2.idlixku.com/series/marvels-daredevil-2015"],
-    ["Spider-Man: Into the Spider-Verse", "14 Desember 2018", "Sony Pictures Animation", "spiderverse", {rating:8.4, nonmcu:true, animation:true, note:"Miles Morales & multiverse Spider-Man"}, "https://z2.idlixku.com/movie/spider-man-into-the-spider-verse-2018"],
-    ["The Punisher (Season 2)", "18 Januari 2019", "Netflix / Marvel Television", "punisher", {rating:7.7, tvseries:true, note:"Frank lawan Jigsaw"}, "https://z2.idlixku.com/series/marvels-the-punisher-2017"],
-    ["Captain Marvel", "8 Maret 2019", "Marvel Studios / Walt Disney Studios", "marvel", {rating:6.8, note:"Carol Danvers dapat kekuatan kosmik"}, "https://z2.idlixku.com/movie/captain-marvel-2019"],
-    ["Avengers: Endgame", "26 April 2019", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Sisa Avengers coba balikin korban Snap"}, "https://z2.idlixku.com/movie/avengers-endgame-2019"],
-    ["Dark Phoenix", "7 Juni 2019", "20th Century Fox", "xmenfox", {rating:5.8, nonmcu:true, note:"Penutup timeline X-Men First Class"}, "https://z2.idlixku.com/movie/dark-phoenix-2019"],
-    ["Spider-Man: Far From Home", "2 Juli 2019", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter hadapi Mysterio"}, "https://z2.idlixku.com/movie/spider-man-far-from-home-2019"],
-    ["Jessica Jones (Season 3)", "14 Juni 2019", "Netflix / Marvel Television", "jessicajones", {rating:7.3, tvseries:true, note:"Musim terakhir Jessica Jones"}, "https://z2.idlixku.com/series/marvels-jessica-jones-2015"],
-    ["The New Mutants", "28 Agustus 2020", "20th Century Studios", "newmutants", {rating:5.5, nonmcu:true, note:"Remaja mutan terjebak di fasilitas rahasia"}, "https://z2.idlixku.com/movie/the-new-mutants-2020"],
-    ["WandaVision", "15 Januari 2021", "Marvel Studios / Disney+", "wandavision", {rating:7.9, tvseries:true, note:"Wajib nonton — nentuin arc Wanda ke Doctor Strange 2"}, "https://z2.idlixku.com/series/wandavision-2021"],
-    ["The Falcon and the Winter Soldier", "19 Maret 2021", "Marvel Studios / Disney+", "falconwinter", {rating:7.3, tvseries:true, note:"Sam & Bucky hadapi Flag Smashers"}, "https://z2.idlixku.com/series/the-falcon-and-the-winter-soldier-2021"],
-    ["Loki (Season 1)", "9 Juni 2021", "Marvel Studios / Disney+", "loki", {rating:8.2, tvseries:true, note:"Wajib nonton — pembuka konsep multiverse & TVA"}, "https://z2.idlixku.com/series/loki-2021"],
-    ["Black Widow", "9 Juli 2021", "Marvel Studios / Walt Disney Studios", "widow", {rating:6.7, note:"Natasha hadapi masa lalu Red Room"}, "https://z2.idlixku.com/movie/black-widow-2021"],
-    ["What If...? (Season 1)", "11 Agustus 2021", "Marvel Studios / Disney+", "whatif", {rating:7.4, tvseries:true, animation:true, note:"Serial animasi multiverse — nyambung ke tema multiverse Doctor Strange 2 & Doomsday"}, "https://z2.idlixku.com/series/what-if-2021"],
-    ["Shang-Chi and the Legend of the Ten Rings", "3 September 2021", "Marvel Studios / Walt Disney Studios", "shangchi", {rating:7.4, note:"Shang-Chi lawan ayahnya sendiri"}, "https://z2.idlixku.com/movie/shang-chi-and-the-legend-of-the-ten-rings-2021"],
-    ["Venom: Let There Be Carnage", "1 Oktober 2021", "Sony Pictures", "venom", {rating:5.9, nonmcu:true, note:"Eddie lawan Cletus Kasady / Carnage"}, "https://z2.idlixku.com/movie/venom-let-there-be-carnage-2021"],
-    ["Eternals", "5 November 2021", "Marvel Studios / Walt Disney Studios", "eternals", {rating:6.3, note:"Makhluk abadi ciptaan Celestial terungkap"}, "https://z2.idlixku.com/movie/eternals-2021"],
-    ["Hawkeye", "24 November 2021", "Marvel Studios / Disney+", "hawkeye", {rating:7.6, tvseries:true, note:"Ngenalin Yelena Belova, tokoh sentral Thunderbolts*"}, "https://z2.idlixku.com/series/hawkeye-2021"],
-    ["Spider-Man: No Way Home", "17 Desember 2021", "Marvel Studios / Sony Pictures", "spiderman", {rating:8.2, note:"Multiverse pecah, villain lintas franchise muncul"}, "https://z2.idlixku.com/movie/spider-man-no-way-home-2021"],
-    ["Moon Knight", "30 Maret 2022", "Marvel Studios / Disney+", "moonknight", {rating:7.3, tvseries:true, note:"Marc Spector berbagi tubuh dengan Steven Grant"}, "https://z2.idlixku.com/series/moon-knight-2022"],
-    ["Morbius", "1 April 2022", "Sony Pictures", "morbius", {rating:5.2, nonmcu:true, note:"Michael Morbius jadi vampir ilmiah"}, "https://z2.idlixku.com/movie/morbius-2022"],
-    ["Doctor Strange in the Multiverse of Madness", "6 Mei 2022", "Marvel Studios / Walt Disney Studios", "strange", {rating:6.9, note:"Strange jelajahi multiverse lindungi America Chavez"}, "https://z2.idlixku.com/movie/doctor-strange-in-the-multiverse-of-madness-2022"],
-    ["Ms. Marvel", "8 Juni 2022", "Marvel Studios / Disney+", "msmarvel", {rating:6.5, tvseries:true, note:"Ngenalin Kamala Khan sebelum The Marvels"}, "https://z2.idlixku.com/series/ms-marvel-2022"],
-    ["Thor: Love and Thunder", "8 Juli 2022", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.2, note:"Thor lawan Gorr the God Butcher"}, "https://z2.idlixku.com/movie/thor-love-and-thunder-2022"],
-    ["She-Hulk: Attorney at Law", "18 Agustus 2022", "Marvel Studios / Disney+", "shehulk", {rating:5.3, tvseries:true, note:"Jennifer Walters, nada cerita komedi hukum"}, "https://z2.idlixku.com/series/she-hulk-attorney-at-law-2022"],
-    ["Black Panther: Wakanda Forever", "11 November 2022", "Marvel Studios / Walt Disney Studios", "panther", {rating:6.7, note:"Wakanda berduka & hadapi Talokan"}, "https://z2.idlixku.com/movie/black-panther-wakanda-forever-2022"],
-    ["Ant-Man and the Wasp: Quantumania", "17 Februari 2023", "Marvel Studios / Walt Disney Studios", "antman", {rating:6.1, note:"Keluarga Lang-Van Dyne kejebak di Quantum Realm, ketemu Kang"}, "https://z2.idlixku.com/movie/ant-man-and-the-wasp-quantumania-2023"],
-    ["Guardians of the Galaxy Vol. 3", "5 Mei 2023", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.9, note:"Perjalanan terakhir Guardians original"}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-vol-3-2023"],
-    ["Spider-Man: Across the Spider-Verse", "2 Juni 2023", "Sony Pictures Animation", "spiderverse", {rating:8.6, nonmcu:true, animation:true, note:"Miles jelajahi Spider-Society lintas dimensi"}, "https://z2.idlixku.com/movie/spider-man-across-the-spider-verse-2023"],
-    ["Secret Invasion", "21 Juni 2023", "Marvel Studios / Disney+", "secretinvasion", {rating:5.8, tvseries:true, note:"Skrull yang menyamar bikin kekacauan global"}, "https://z2.idlixku.com/series/secret-invasion-2023"],
-    ["Loki (Season 2)", "6 Oktober 2023", "Marvel Studios / Disney+", "loki", {rating:8.3, tvseries:true, note:"Wajib nonton — Avengers: Doomsday sekuel langsung dari sini"}, "https://z2.idlixku.com/series/loki-2021"],
-    ["The Marvels", "10 November 2023", "Marvel Studios / Walt Disney Studios", "marvel", {rating:5.5, note:"Carol, Kamala, & Monica tukar tempat"}, "https://z2.idlixku.com/movie/the-marvels-2023"],
-    ["Echo", "9 Januari 2024", "Marvel Studios / Disney+", "echo", {rating:6.5, tvseries:true, note:"Maya Lopez hadapi masa lalu & Kingpin, spin-off Hawkeye"}, "https://z2.idlixku.com/series/echo-2024"],
-    ["Madame Web", "14 Februari 2024", "Sony Pictures", "madameweb", {rating:3.9, nonmcu:true, note:"Cassandra Webb dapat kekuatan clairvoyant"}, "https://z2.idlixku.com/movie/madame-web-2024"],
-    ["X-Men '97 (Season 1)", "20 Maret 2024", "Marvel Animation / Disney+", "xmenfox", {rating:8.7, nonmcu:true, tvseries:true, animation:true, note:"Lanjutan langsung serial animasi X-Men 90-an"}, "https://z2.idlixku.com/series/x-men-97-2024"],
-    ["Deadpool & Wolverine", "26 Juli 2024", "Marvel Studios / Walt Disney Studios", "deadpool", {rating:7.7, note:"Deadpool resmi masuk MCU, reunian sama Wolverine"}, "https://z2.idlixku.com/movie/deadpool-and-wolverine-2024"],
-    ["Agatha All Along", "18 September 2024", "Marvel Studios / Disney+", "agatha", {rating:6.9, tvseries:true, note:"Lanjutan dunia WandaVision, nyambung ke VisionQuest"}, "https://z2.idlixku.com/series/agatha-all-along-2024"],
-    ["Venom: The Last Dance", "25 Oktober 2024", "Sony Pictures", "venom", {rating:5.3, nonmcu:true, note:"Penutup trilogi Venom versi Sony"}, "https://z2.idlixku.com/movie/venom-the-last-dance-2024"],
-    ["Kraven the Hunter", "13 Desember 2024", "Sony Pictures", "kraven", {rating:5.0, nonmcu:true, note:"Asal-usul Kraven the Hunter"}, "https://z2.idlixku.com/movie/kraven-the-hunter-2024"],
-    ["Captain America: Brave New World", "14 Februari 2025", "Marvel Studios / Walt Disney Studios", "cap", {rating:6.0, note:"Sam Wilson jadi Cap baru, hadapi Hulk merah"}, "https://z2.idlixku.com/movie/captain-america-brave-new-world-2025"],
-    ["Daredevil: Born Again (Season 1)", "4 Maret 2025", "Marvel Studios / Disney+", "daredevil", {rating:7.5, tvseries:true, note:"Matt Murdock balik, Kingpin jadi walikota New York"}, "https://z2.idlixku.com/series/daredevil-born-again-2025"],
-    ["Thunderbolts*", "2 Mei 2025", "Marvel Studios / Walt Disney Studios", "thunderbolts", {rating:7.3, note:"Tim antihero 'sampah' MCU dipaksa kerja bareng"}, "https://z2.idlixku.com/movie/thunderbolts-2025"],
-    ["Ironheart", "24 Juni 2025", "Marvel Studios / Disney+", "ironheart", {tvseries:true, note:"Riri Williams pasca Wakanda Forever"}, "https://z2.idlixku.com/series/ironheart-2025"],
-    ["The Fantastic Four: First Steps", "25 Juli 2025", "Marvel Studios / Walt Disney Studios", "fantasticfour", {rating:7.5, note:"Fantastic Four debut MCU dari Earth-828, lawan Galactus"}, "https://z2.idlixku.com/movie/the-fantastic-4-first-steps-2025"],
-    ["Eyes of Wakanda", "1 Agustus 2025", "Marvel Studios / Disney+", "panther", {tvseries:true, animation:true, note:"Serial animasi sejarah Wakanda"}, "https://z2.idlixku.com/series/eyes-of-wakanda-2025"],
-    ["Marvel Zombies", "24 September 2025", "Marvel Studios / Disney+", "zombies", {tvseries:true, animation:true, note:"Spin-off What If...? bergenre horor zombie"}, "https://z2.idlixku.com/series/marvel-zombies-2025"],
-    ["Wonder Man", "27 Januari 2026", "Marvel Studios / Disney+", "wonderman", {tvseries:true, note:"Simon Williams, drama industri hiburan & aksi superhero"}, "https://z2.idlixku.com/series/wonder-man-2026"],
-    ["Daredevil: Born Again (Season 2)", "24 Maret 2026", "Marvel Studios / Disney+", "daredevil", {tvseries:true, note:"Lanjutan konflik Matt Murdock vs Fisk"}, "https://z2.idlixku.com/series/daredevil-born-again-2025"],
-    ["The Punisher: One Last Kill", "12 Mei 2026", "Marvel Studios / Disney+", "punisher", {tvseries:true, note:"Frank Castle kembali di kontinuitas MCU"}, "https://z2.idlixku.com/movie/the-punisher-one-last-kill-2026"],
-    ["X-Men '97 (Season 2)", "2026", "Marvel Animation / Disney+", "xmenfox", {nonmcu:true, tvseries:true, animation:true, note:"Lanjutan X-Men '97"}, "https://z2.idlixku.com/series/x-men-97-2024"],
-    ["Spider-Man: Brand New Day", "31 Juli 2026", "Marvel Studios / Sony Pictures", "spiderman", {note:"Kelanjutan Peter pasca semua orang lupa identitasnya"}, "https://z2.idlixku.com/movie/spider-man-brand-new-day-2026"],
-    ["Your Friendly Neighborhood Spider-Man (Season 2)", "2026", "Marvel Animation / Disney+", "spiderman", {nonmcu:true, tvseries:true, animation:true, note:"Serial animasi Spider-Man, non-MCU"}, "https://z2.idlixku.com/series/your-friendly-neighborhood-spider-man-2025"],
-    ["VisionQuest", "14 Oktober 2026", "Marvel Studios / Disney+", "wandavision", {tvseries:true, note:"Sekuel WandaVision — Vision cari jati diri, ketemu Ultron & JARVIS"}, "https://z2.idlixku.com/series/visionquest-2026"],
-    ["Avengers: Doomsday", "18 Desember 2026", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Beberapa tim Avengers dari universe berbeda ketemu Doctor Doom"}, "https://z2.idlixku.com/movie/avengers-doomsday-2026"],
-    ["Daredevil: Born Again (Season 3)", "Maret 2027", "Marvel Studios / Disney+", "daredevil", {tvseries:true, upcoming:true, note:"Musim ketiga Born Again"}, "https://z2.idlixku.com/series/daredevil-born-again-season-3-2027"],
-    ["Spider-Man: Beyond the Spider-Verse", "2027 (tentatif)", "Sony Pictures Animation", "spiderverse", {nonmcu:true, animation:true, upcoming:true, note:"Penutup trilogi animasi Spider-Verse"}, "https://z2.idlixku.com/movie/spider-man-beyond-the-spider-verse-2027"],
-    ["Avengers: Secret Wars", "17 Desember 2027", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Puncak Multiverse Saga, kemungkinan reset besar MCU"}, "https://z2.idlixku.com/movie/avengers-secret-wars-2027"],
+    ["Blade", "August 21, 1998", "New Line Cinema", "blade", {rating:7.1, nonmcu:true, note:"The film that launched the Blade trilogy, the earliest big-screen take on the Marvel vampire hunter."}, "https://z2.idlixku.com/movie/blade-1998"],
+    ["X-Men", "July 14, 2000", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"The film that kicked off Fox's X-Men franchise."}, "https://z2.idlixku.com/movie/x-men-2000"],
+    ["Blade II", "March 22, 2002", "New Line Cinema", "blade", {rating:6.7, nonmcu:true, note:"Blade faces off against the mutant Reaper vampires."}, "https://z2.idlixku.com/movie/blade-ii-2002"],
+    ["Spider-Man", "May 3, 2002", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.4, nonmcu:true, note:"Peter Parker's origin story, directed by Sam Raimi."}, "https://z2.idlixku.com/movie/spider-man-2002"],
+    ["Daredevil", "February 14, 2003", "20th Century Fox", "daredevil", {rating:5.3, nonmcu:true, note:"The earliest live-action take on Daredevil, long before Netflix or Disney+."}, "https://z2.idlixku.com/movie/daredevil-2003"],
+    ["X2: X-Men United", "May 2, 2003", "20th Century Fox", "xmenfox", {rating:7.4, nonmcu:true, note:"Widely considered one of the best X-Men films from the Fox era."}, "https://z2.idlixku.com/movie/x2-2003"],
+    ["Hulk", "June 20, 2003", "Universal Pictures", "hulk", {rating:5.6, nonmcu:true, note:"Ang Lee's take on the character, entirely separate from the MCU."}, "https://z2.idlixku.com/movie/hulk-2003"],
+    ["Spider-Man 2", "June 30, 2004", "Sony Pictures / Columbia Pictures", "spiderman", {rating:7.5, nonmcu:true, note:"Peter juggles his secret identity while facing Doc Ock."}, "https://z2.idlixku.com/movie/spider-man-2-2004"],
+    ["Blade: Trinity", "December 8, 2004", "New Line Cinema", "blade", {rating:5.9, nonmcu:true, note:"The closing chapter of the Blade trilogy."}, "https://z2.idlixku.com/movie/blade-trinity-2004"],
+    ["Elektra", "January 14, 2005", "20th Century Fox", "elektra", {rating:4.7, nonmcu:true, note:"A spin-off from the 2003 Daredevil film."}, "https://z2.idlixku.com/movie/elektra-2005"],
+    ["Fantastic Four", "July 8, 2005", "20th Century Fox", "fantasticfourfox", {rating:5.7, nonmcu:true, note:"Fox's take on Marvel's first family."}, "https://z2.idlixku.com/movie/fantastic-four-2005"],
+    ["X-Men: The Last Stand", "May 26, 2006", "20th Century Fox", "xmenfox", {rating:6.8, nonmcu:true, note:"The first attempt at adapting the Dark Phoenix Saga."}, "https://z2.idlixku.com/movie/x-men-the-last-stand-2006"],
+    ["Ghost Rider", "February 16, 2007", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:5.2, nonmcu:true, note:"Nicolas Cage stars as Johnny Blaze, the Spirit of Vengeance."}, "https://z2.idlixku.com/movie/ghost-rider-2007"],
+    ["Spider-Man 3", "May 4, 2007", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.3, nonmcu:true, note:"Venom enters the story in the weakest entry of Raimi's trilogy."}, "https://z2.idlixku.com/movie/spider-man-3-2007"],
+    ["Fantastic Four: Rise of the Silver Surfer", "June 15, 2007", "20th Century Fox", "fantasticfourfox", {rating:5.6, nonmcu:true, note:"Fox's sequel to Fantastic Four."}, "https://z2.idlixku.com/movie/fantastic-four-rise-of-the-silver-surfer-2007"],
+    ["Iron Man", "May 2, 2008", "Marvel Studios / Paramount Pictures", "ironman", {rating:7.9, note:"The film that launched the MCU."}, "https://z2.idlixku.com/movie/iron-man-2008"],
+    ["The Incredible Hulk", "June 13, 2008", "Marvel Studios / Universal Pictures", "hulk", {rating:6.6, note:"The MCU's reboot of the Hulk."}, "https://z2.idlixku.com/movie/the-incredible-hulk-2008"],
+    ["Punisher: War Zone", "December 5, 2008", "Lionsgate", "punisher", {rating:5.4, nonmcu:true, note:"A reboot of the Punisher."}, "https://z2.idlixku.com/movie/punisher-war-zone-2008"],
+    ["X-Men Origins: Wolverine", "May 1, 2009", "20th Century Fox", "wolverine", {rating:6.0, nonmcu:true, note:"Fox's take on Wolverine's origin story."}, "https://z2.idlixku.com/movie/x-men-origins-wolverine-2009"],
+    ["Iron Man 2", "May 7, 2010", "Marvel Studios / Paramount Pictures", "ironman", {rating:6.9, note:"Tony battles palladium poisoning and Whiplash."}, "https://z2.idlixku.com/movie/iron-man-2-2010"],
+    ["Thor", "May 6, 2011", "Marvel Studios / Paramount Pictures", "thor", {rating:7.0, note:"Asgard is introduced to the MCU for the first time."}, "https://z2.idlixku.com/movie/thor-2011"],
+    ["X-Men: First Class", "June 3, 2011", "20th Century Fox", "xmenfox", {rating:7.7, nonmcu:true, note:"A timeline reboot for X-Men, set in the 1960s."}, "https://z2.idlixku.com/movie/x-men-first-class-2011"],
+    ["Captain America: The First Avenger", "July 22, 2011", "Marvel Studios / Paramount Pictures", "cap", {rating:6.9, note:"Steve Rogers' origin story during World War II."}, "https://z2.idlixku.com/movie/captain-america-the-first-avenger-2011"],
+    ["Ghost Rider: Spirit of Vengeance", "December 11, 2011", "Sony Pictures / Columbia Pictures", "ghostrider", {rating:4.3, nonmcu:true, note:"The sequel to Ghost Rider."}, "https://z2.idlixku.com/movie/ghost-rider-spirit-of-vengeance-2011"],
+    ["The Avengers", "May 4, 2012", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.0, note:"The Avengers assemble for the first time to stop Loki."}, "https://z2.idlixku.com/movie/the-avengers-2012"],
+    ["The Amazing Spider-Man", "July 3, 2012", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.9, nonmcu:true, note:"A Spider-Man reboot starring Andrew Garfield."}, "https://z2.idlixku.com/movie/the-amazing-spider-man-2012"],
+    ["Iron Man 3", "May 3, 2013", "Marvel Studios / Walt Disney Studios", "ironman", {rating:7.1, note:"Tony deals with the trauma of the Battle of New York."}, "https://z2.idlixku.com/movie/iron-man-3-2013"],
+    ["The Wolverine", "July 25, 2013", "20th Century Fox", "wolverine", {rating:6.7, nonmcu:true, note:"Logan travels to Japan to face old ties."}, "https://z2.idlixku.com/movie/the-wolverine-2013"],
+    ["Marvel's Agents of S.H.I.E.L.D. (Season 1)", "September 24, 2013", "ABC / Marvel Television", "shield", {rating:7.3, tvseries:true, note:"Coulson forms a S.H.I.E.L.D. team in the aftermath of The Avengers."}, "https://z2.idlixku.com/series/marvels-agents-of-shield-2013"],
+    ["Thor: The Dark World", "November 8, 2013", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.6, note:"Thor faces the Dark Elf Malekith."}, "https://z2.idlixku.com/movie/thor-the-dark-world-2013"],
+    ["Captain America: The Winter Soldier", "April 4, 2014", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"HYDRA is revealed to have infiltrated S.H.I.E.L.D. from within."}, "https://z2.idlixku.com/movie/captain-america-the-winter-soldier-2014"],
+    ["The Amazing Spider-Man 2", "May 2, 2014", "Sony Pictures / Columbia Pictures", "spiderman", {rating:6.6, nonmcu:true, note:"Peter faces off against Electro."}, "https://z2.idlixku.com/movie/the-amazing-spider-man-2-2014"],
+    ["X-Men: Days of Future Past", "May 23, 2014", "20th Century Fox", "xmenfox", {rating:7.9, nonmcu:true, note:"The original X-Men cast joins forces with the First Class team."}, "https://z2.idlixku.com/movie/x-men-days-of-future-past-2014"],
+    ["Guardians of the Galaxy", "August 1, 2014", "Marvel Studios / Walt Disney Studios", "gotg", {rating:8.0, note:"Star-Lord and his crew protect an Infinity Stone."}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-2014"],
+    ["Marvel's Agent Carter (Season 1)", "January 6, 2015", "ABC / Marvel Television", "agentcarter", {rating:7.7, tvseries:true, note:"Peggy Carter navigates espionage after World War II."}, "https://z2.idlixku.com/series/marvels-agent-carter-2015"],
+    ["Daredevil (Season 1)", "April 10, 2015", "Netflix / Marvel Television", "daredevil", {rating:8.6, tvseries:true, note:"Matt Murdock protects Hell's Kitchen by night."}, "https://z2.idlixku.com/series/marvels-daredevil-2015"],
+    ["Avengers: Age of Ultron", "May 1, 2015", "Marvel Studios / Walt Disney Studios", "avengers", {rating:7.3, note:"The Avengers face the rogue AI Ultron."}, "https://z2.idlixku.com/movie/avengers-age-of-ultron-2015"],
+    ["Ant-Man", "July 17, 2015", "Marvel Studios / Walt Disney Studios", "antman", {rating:7.0, note:"Scott Lang becomes the new Ant-Man."}, "https://z2.idlixku.com/movie/ant-man-2015"],
+    ["Fantastic Four", "August 7, 2015", "20th Century Fox", "fantasticfourfox", {rating:4.3, nonmcu:true, note:"Fox's reboot of the Fantastic Four."}, "https://z2.idlixku.com/movie/fantastic-four-2015"],
+    ["Jessica Jones (Season 1)", "November 20, 2015", "Netflix / Marvel Television", "jessicajones", {rating:8.2, tvseries:true, note:"Jessica Jones confronts the mind-controlling Kilgrave."}, "https://z2.idlixku.com/series/marvels-jessica-jones-2015"],
+    ["Deadpool", "February 12, 2016", "20th Century Fox", "deadpoolfox", {rating:8.0, nonmcu:true, note:"Fox's foul-mouthed debut for Deadpool."}, "https://z2.idlixku.com/movie/deadpool-2016"],
+    ["Daredevil (Season 2)", "March 18, 2016", "Netflix / Marvel Television", "daredevil", {rating:8.6, tvseries:true, note:"The Punisher and Elektra enter the story."}, "https://z2.idlixku.com/series/marvels-daredevil-2015"],
+    ["Captain America: Civil War", "May 6, 2016", "Marvel Studios / Walt Disney Studios", "cap", {rating:7.8, note:"The Avengers split into two opposing sides."}, "https://z2.idlixku.com/movie/captain-america-civil-war-2016"],
+    ["X-Men: Apocalypse", "May 27, 2016", "20th Century Fox", "xmenfox", {rating:6.9, nonmcu:true, note:"The ancient mutant Apocalypse awakens."}, "https://z2.idlixku.com/movie/x-men-apocalypse-2016"],
+    ["Luke Cage (Season 1)", "September 30, 2016", "Netflix / Marvel Television", "lukecage", {rating:8.0, tvseries:true, note:"Luke Cage becomes the bulletproof protector of Harlem."}, "https://z2.idlixku.com/series/marvels-luke-cage-2016"],
+    ["Doctor Strange", "November 4, 2016", "Marvel Studios / Walt Disney Studios", "strange", {rating:7.5, note:"Stephen Strange's origin story into the mystic arts."}, "https://z2.idlixku.com/movie/doctor-strange-2016"],
+    ["Legion (Season 1)", "February 8, 2017", "FX / Marvel Television", "legion", {rating:8.4, nonmcu:true, tvseries:true, note:"David Haller anchors a more psychedelic corner of the X-Men mythos."}, "https://z2.idlixku.com/series/legion-2017"],
+    ["Iron Fist (Season 1)", "March 17, 2017", "Netflix / Marvel Television", "ironfist", {rating:6.4, tvseries:true, note:"Danny Rand returns from the mystical city of K'un-Lun."}, "https://z2.idlixku.com/series/marvels-iron-fist-2017"],
+    ["Guardians of the Galaxy Vol. 2", "May 5, 2017", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.6, note:"Star-Lord meets his father, Ego."}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-vol-2-2017"],
+    ["Spider-Man: Homecoming", "July 7, 2017", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter's official solo debut within the MCU."}, "https://z2.idlixku.com/movie/spider-man-homecoming-2017"],
+    ["The Defenders", "August 18, 2017", "Netflix / Marvel Television", "defenders", {rating:7.6, tvseries:true, note:"Daredevil, Jessica Jones, Luke Cage, and Iron Fist team up."}, "https://z2.idlixku.com/series/marvels-the-defenders-2017"],
+    ["The Gifted (Season 1)", "October 2, 2017", "20th Century Fox", "gifted", {rating:7.1, nonmcu:true, tvseries:true, note:"A family of mutants goes on the run from the government."}, "https://z2.idlixku.com/series/the-gifted-2017"],
+    ["Inhumans", "September 29, 2017", "ABC / Marvel Television", "inhumans", {rating:4.4, tvseries:true, note:"Black Bolt and the Inhuman royal family."}, "https://z2.idlixku.com/series/marvels-inhumans-2017"],
+    ["Thor: Ragnarok", "November 3, 2017", "Marvel Studios / Walt Disney Studios", "thor", {rating:7.9, note:"Thor faces his sister Hela and the fall of Asgard."}, "https://z2.idlixku.com/movie/thor-ragnarok-2017"],
+    ["The Punisher (Season 1)", "November 17, 2017", "Netflix / Marvel Television", "punisher", {rating:8.5, tvseries:true, note:"Frank Castle wages a one-man war of vengeance."}, "https://z2.idlixku.com/series/marvels-the-punisher-2017"],
+    ["Marvel's Runaways (Season 1)", "November 21, 2017", "Hulu / Marvel Television", "runaways", {rating:6.7, tvseries:true, note:"A group of teens discovers their parents are secretly supervillains."}, "https://z2.idlixku.com/series/marvels-runaways-2017"],
+    ["Black Panther", "February 16, 2018", "Marvel Studios / Walt Disney Studios", "panther", {rating:7.3, note:"T'Challa becomes king of Wakanda."}, "https://z2.idlixku.com/movie/black-panther-2018"],
+    ["Jessica Jones (Season 2)", "March 8, 2018", "Netflix / Marvel Television", "jessicajones", {rating:7.2, tvseries:true, note:"Jessica digs into the origins of her powers."}, "https://z2.idlixku.com/series/marvels-jessica-jones-2015"],
+    ["Cloak & Dagger (Season 1)", "June 7, 2018", "Freeform / Marvel Television", "cloakdagger", {rating:6.7, tvseries:true, note:"Two teens with opposing supernatural powers."}, "https://z2.idlixku.com/series/marvels-cloak-and-dagger-2018"],
+    ["Deadpool 2", "May 18, 2018", "20th Century Fox", "deadpoolfox", {rating:7.6, nonmcu:true, note:"Deadpool assembles the ill-fated X-Force."}, "https://z2.idlixku.com/movie/deadpool-2-2018"],
+    ["Avengers: Infinity War", "April 27, 2018", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"Thanos hunts down every Infinity Stone."}, "https://z2.idlixku.com/movie/avengers-infinity-war-2018"],
+    ["Luke Cage (Season 2)", "June 22, 2018", "Netflix / Marvel Television", "lukecage", {rating:7.5, tvseries:true, note:"Luke faces off against Bushmaster."}, "https://z2.idlixku.com/series/marvels-luke-cage-2016"],
+    ["Ant-Man and the Wasp", "July 6, 2018", "Marvel Studios / Walt Disney Studios", "antman", {rating:7.0, note:"A race to rescue Janet van Dyne from the Quantum Realm."}, "https://z2.idlixku.com/movie/ant-man-and-the-wasp-2018"],
+    ["Iron Fist (Season 2)", "September 7, 2018", "Netflix / Marvel Television", "ironfist", {rating:6.1, tvseries:true, note:"Danny faces a new threat in New York."}, "https://z2.idlixku.com/series/marvels-iron-fist-2017"],
+    ["Venom", "October 5, 2018", "Sony Pictures", "venom", {rating:6.6, nonmcu:true, note:"Eddie Brock bonds with the alien symbiote Venom."}, "https://z2.idlixku.com/movie/venom-2018"],
+    ["Daredevil (Season 3)", "October 19, 2018", "Netflix / Marvel Television", "daredevil", {rating:8.7, tvseries:true, note:"Wilson Fisk returns as the season's central threat."}, "https://z2.idlixku.com/series/marvels-daredevil-2015"],
+    ["Spider-Man: Into the Spider-Verse", "December 14, 2018", "Sony Pictures Animation", "spiderverse", {rating:8.4, nonmcu:true, animation:true, note:"Miles Morales discovers the Spider-Verse multiverse."}, "https://z2.idlixku.com/movie/spider-man-into-the-spider-verse-2018"],
+    ["The Punisher (Season 2)", "January 18, 2019", "Netflix / Marvel Television", "punisher", {rating:7.7, tvseries:true, note:"Frank clashes with his old enemy Jigsaw."}, "https://z2.idlixku.com/series/marvels-the-punisher-2017"],
+    ["Captain Marvel", "March 8, 2019", "Marvel Studios / Walt Disney Studios", "marvel", {rating:6.8, note:"Carol Danvers gains cosmic-level powers."}, "https://z2.idlixku.com/movie/captain-marvel-2019"],
+    ["Avengers: Endgame", "April 26, 2019", "Marvel Studios / Walt Disney Studios", "avengers", {rating:8.4, note:"The remaining Avengers attempt to undo the Snap."}, "https://z2.idlixku.com/movie/avengers-endgame-2019"],
+    ["Dark Phoenix", "June 7, 2019", "20th Century Fox", "xmenfox", {rating:5.8, nonmcu:true, note:"The closing chapter of the First Class-era X-Men timeline."}, "https://z2.idlixku.com/movie/dark-phoenix-2019"],
+    ["Spider-Man: Far From Home", "July 2, 2019", "Marvel Studios / Sony Pictures", "spiderman", {rating:7.4, note:"Peter faces the illusion-master Mysterio."}, "https://z2.idlixku.com/movie/spider-man-far-from-home-2019"],
+    ["Jessica Jones (Season 3)", "June 14, 2019", "Netflix / Marvel Television", "jessicajones", {rating:7.3, tvseries:true, note:"The final season of Jessica Jones."}, "https://z2.idlixku.com/series/marvels-jessica-jones-2015"],
+    ["The New Mutants", "August 28, 2020", "20th Century Studios", "newmutants", {rating:5.5, nonmcu:true, note:"Young mutants are trapped in a secretive facility."}, "https://z2.idlixku.com/movie/the-new-mutants-2020"],
+    ["WandaVision", "January 15, 2021", "Marvel Studios / Disney+", "wandavision", {rating:7.9, tvseries:true, note:"Essential viewing \u2014 sets up Wanda's arc heading into Doctor Strange 2."}, "https://z2.idlixku.com/series/wandavision-2021"],
+    ["The Falcon and the Winter Soldier", "March 19, 2021", "Marvel Studios / Disney+", "falconwinter", {rating:7.3, tvseries:true, note:"Sam and Bucky take on the Flag-Smashers."}, "https://z2.idlixku.com/series/the-falcon-and-the-winter-soldier-2021"],
+    ["Loki (Season 1)", "June 9, 2021", "Marvel Studios / Disney+", "loki", {rating:8.2, tvseries:true, note:"Essential viewing \u2014 introduces the multiverse and the TVA."}, "https://z2.idlixku.com/series/loki-2021"],
+    ["Black Widow", "July 9, 2021", "Marvel Studios / Walt Disney Studios", "widow", {rating:6.7, note:"Natasha confronts her past with the Red Room."}, "https://z2.idlixku.com/movie/black-widow-2021"],
+    ["What If...? (Season 1)", "August 11, 2021", "Marvel Studios / Disney+", "whatif", {rating:7.4, tvseries:true, animation:true, note:"An animated multiverse anthology, tying into the multiverse themes of Doctor Strange 2 and Doomsday."}, "https://z2.idlixku.com/series/what-if-2021"],
+    ["Shang-Chi and the Legend of the Ten Rings", "September 3, 2021", "Marvel Studios / Walt Disney Studios", "shangchi", {rating:7.4, note:"Shang-Chi confronts his own father."}, "https://z2.idlixku.com/movie/shang-chi-and-the-legend-of-the-ten-rings-2021"],
+    ["Venom: Let There Be Carnage", "October 1, 2021", "Sony Pictures", "venom", {rating:5.9, nonmcu:true, note:"Eddie faces off against Cletus Kasady, aka Carnage."}, "https://z2.idlixku.com/movie/venom-let-there-be-carnage-2021"],
+    ["Eternals", "November 5, 2021", "Marvel Studios / Walt Disney Studios", "eternals", {rating:6.3, note:"Ancient immortals created by the Celestials are revealed."}, "https://z2.idlixku.com/movie/eternals-2021"],
+    ["Hawkeye", "November 24, 2021", "Marvel Studios / Disney+", "hawkeye", {rating:7.6, tvseries:true, note:"Introduces Yelena Belova, a central figure in Thunderbolts*."}, "https://z2.idlixku.com/series/hawkeye-2021"],
+    ["Spider-Man: No Way Home", "December 17, 2021", "Marvel Studios / Sony Pictures", "spiderman", {rating:8.2, note:"The multiverse breaks open, bringing villains from across franchises."}, "https://z2.idlixku.com/movie/spider-man-no-way-home-2021"],
+    ["Moon Knight", "March 30, 2022", "Marvel Studios / Disney+", "moonknight", {rating:7.3, tvseries:true, note:"Marc Spector shares a body with Steven Grant."}, "https://z2.idlixku.com/series/moon-knight-2022"],
+    ["Morbius", "April 1, 2022", "Sony Pictures", "morbius", {rating:5.2, nonmcu:true, note:"Michael Morbius transforms into a scientific vampire."}, "https://z2.idlixku.com/movie/morbius-2022"],
+    ["Doctor Strange in the Multiverse of Madness", "May 6, 2022", "Marvel Studios / Walt Disney Studios", "strange", {rating:6.9, note:"Strange journeys across the multiverse to protect America Chavez."}, "https://z2.idlixku.com/movie/doctor-strange-in-the-multiverse-of-madness-2022"],
+    ["Ms. Marvel", "June 8, 2022", "Marvel Studios / Disney+", "msmarvel", {rating:6.5, tvseries:true, note:"Introduces Kamala Khan ahead of The Marvels."}, "https://z2.idlixku.com/series/ms-marvel-2022"],
+    ["Thor: Love and Thunder", "July 8, 2022", "Marvel Studios / Walt Disney Studios", "thor", {rating:6.2, note:"Thor faces Gorr the God Butcher."}, "https://z2.idlixku.com/movie/thor-love-and-thunder-2022"],
+    ["She-Hulk: Attorney at Law", "August 18, 2022", "Marvel Studios / Disney+", "shehulk", {rating:5.3, tvseries:true, note:"Jennifer Walters navigates superheroics with a legal-comedy twist."}, "https://z2.idlixku.com/series/she-hulk-attorney-at-law-2022"],
+    ["Black Panther: Wakanda Forever", "November 11, 2022", "Marvel Studios / Walt Disney Studios", "panther", {rating:6.7, note:"A grieving Wakanda faces the underwater nation of Talokan."}, "https://z2.idlixku.com/movie/black-panther-wakanda-forever-2022"],
+    ["Ant-Man and the Wasp: Quantumania", "February 17, 2023", "Marvel Studios / Walt Disney Studios", "antman", {rating:6.1, note:"The Lang-Van Dyne family gets trapped in the Quantum Realm and meets Kang."}, "https://z2.idlixku.com/movie/ant-man-and-the-wasp-quantumania-2023"],
+    ["Guardians of the Galaxy Vol. 3", "May 5, 2023", "Marvel Studios / Walt Disney Studios", "gotg", {rating:7.9, note:"The original Guardians' final ride together."}, "https://z2.idlixku.com/movie/guardians-of-the-galaxy-vol-3-2023"],
+    ["Spider-Man: Across the Spider-Verse", "June 2, 2023", "Sony Pictures Animation", "spiderverse", {rating:8.6, nonmcu:true, animation:true, note:"Miles ventures into the dimension-hopping Spider-Society."}, "https://z2.idlixku.com/movie/spider-man-across-the-spider-verse-2023"],
+    ["Secret Invasion", "June 21, 2023", "Marvel Studios / Disney+", "secretinvasion", {rating:5.8, tvseries:true, note:"Shape-shifting Skrulls cause chaos across the globe."}, "https://z2.idlixku.com/series/secret-invasion-2023"],
+    ["Loki (Season 2)", "October 6, 2023", "Marvel Studios / Disney+", "loki", {rating:8.3, tvseries:true, note:"Essential viewing \u2014 Avengers: Doomsday follows directly from here."}, "https://z2.idlixku.com/series/loki-2021"],
+    ["The Marvels", "November 10, 2023", "Marvel Studios / Walt Disney Studios", "marvel", {rating:5.5, note:"Carol, Kamala, and Monica keep swapping places with each other."}, "https://z2.idlixku.com/movie/the-marvels-2023"],
+    ["Echo", "January 9, 2024", "Marvel Studios / Disney+", "echo", {rating:6.5, tvseries:true, note:"Maya Lopez confronts her past and the Kingpin in this Hawkeye spin-off."}, "https://z2.idlixku.com/series/echo-2024"],
+    ["Madame Web", "February 14, 2024", "Sony Pictures", "madameweb", {rating:3.9, nonmcu:true, note:"Cassandra Webb gains clairvoyant powers."}, "https://z2.idlixku.com/movie/madame-web-2024"],
+    ["X-Men '97 (Season 1)", "March 20, 2024", "Marvel Animation / Disney+", "xmenfox", {rating:8.7, nonmcu:true, tvseries:true, animation:true, note:"A direct continuation of the '90s X-Men animated series."}, "https://z2.idlixku.com/series/x-men-97-2024"],
+    ["Deadpool & Wolverine", "July 26, 2024", "Marvel Studios / Walt Disney Studios", "deadpool", {rating:7.7, note:"Deadpool officially joins the MCU and reunites with Wolverine."}, "https://z2.idlixku.com/movie/deadpool-and-wolverine-2024"],
+    ["Agatha All Along", "September 18, 2024", "Marvel Studios / Disney+", "agatha", {rating:6.9, tvseries:true, note:"A continuation of the WandaVision world, leading into VisionQuest."}, "https://z2.idlixku.com/series/agatha-all-along-2024"],
+    ["Venom: The Last Dance", "October 25, 2024", "Sony Pictures", "venom", {rating:5.3, nonmcu:true, note:"The closing chapter of Sony's Venom trilogy."}, "https://z2.idlixku.com/movie/venom-the-last-dance-2024"],
+    ["Kraven the Hunter", "December 13, 2024", "Sony Pictures", "kraven", {rating:5.0, nonmcu:true, note:"The origin story of Kraven the Hunter."}, "https://z2.idlixku.com/movie/kraven-the-hunter-2024"],
+    ["Captain America: Brave New World", "February 14, 2025", "Marvel Studios / Walt Disney Studios", "cap", {rating:6.0, note:"Sam Wilson steps up as the new Cap and faces the Red Hulk."}, "https://z2.idlixku.com/movie/captain-america-brave-new-world-2025"],
+    ["Daredevil: Born Again (Season 1)", "March 4, 2025", "Marvel Studios / Disney+", "daredevil", {rating:7.5, tvseries:true, note:"Matt Murdock returns as Kingpin becomes mayor of New York."}, "https://z2.idlixku.com/series/daredevil-born-again-2025"],
+    ["Thunderbolts*", "May 2, 2025", "Marvel Studios / Walt Disney Studios", "thunderbolts", {rating:7.3, note:"The MCU's misfit anti-heroes are forced to work together."}, "https://z2.idlixku.com/movie/thunderbolts-2025"],
+    ["Ironheart", "June 24, 2025", "Marvel Studios / Disney+", "ironheart", {tvseries:true, note:"Riri Williams builds her legacy after Wakanda Forever."}, "https://z2.idlixku.com/series/ironheart-2025"],
+    ["The Fantastic Four: First Steps", "July 25, 2025", "Marvel Studios / Walt Disney Studios", "fantasticfour", {rating:7.5, note:"The Fantastic Four debut in the MCU from Earth-828, facing Galactus."}, "https://z2.idlixku.com/movie/the-fantastic-4-first-steps-2025"],
+    ["Eyes of Wakanda", "August 1, 2025", "Marvel Studios / Disney+", "panther", {tvseries:true, animation:true, note:"An animated series exploring Wakanda's history."}, "https://z2.idlixku.com/series/eyes-of-wakanda-2025"],
+    ["Marvel Zombies", "September 24, 2025", "Marvel Studios / Disney+", "zombies", {tvseries:true, animation:true, note:"A zombie-horror spin-off of What If...?"}, "https://z2.idlixku.com/series/marvel-zombies-2025"],
+    ["Wonder Man", "January 27, 2026", "Marvel Studios / Disney+", "wonderman", {tvseries:true, note:"Simon Williams navigates showbiz drama and superhero action."}, "https://z2.idlixku.com/series/wonder-man-2026"],
+    ["Daredevil: Born Again (Season 2)", "March 24, 2026", "Marvel Studios / Disney+", "daredevil", {tvseries:true, note:"The conflict between Matt Murdock and Fisk continues."}, "https://z2.idlixku.com/series/daredevil-born-again-2025"],
+    ["The Punisher: One Last Kill", "May 12, 2026", "Marvel Studios / Disney+", "punisher", {tvseries:true, note:"Frank Castle returns within MCU continuity."}, "https://z2.idlixku.com/movie/the-punisher-one-last-kill-2026"],
+    ["X-Men '97 (Season 2)", "2026", "Marvel Animation / Disney+", "xmenfox", {nonmcu:true, tvseries:true, animation:true, note:"The continuation of X-Men '97."}, "https://z2.idlixku.com/series/x-men-97-2024"],
+    ["Spider-Man: Brand New Day", "July 31, 2026", "Marvel Studios / Sony Pictures", "spiderman", {note:"Peter's story continues after everyone forgot his identity."}, "https://z2.idlixku.com/movie/spider-man-brand-new-day-2026"],
+    ["Your Friendly Neighborhood Spider-Man (Season 2)", "2026", "Marvel Animation / Disney+", "spiderman", {nonmcu:true, tvseries:true, animation:true, note:"An animated Spider-Man series, outside MCU continuity."}, "https://z2.idlixku.com/series/your-friendly-neighborhood-spider-man-2025"],
+    ["VisionQuest", "October 14, 2026", "Marvel Studios / Disney+", "wandavision", {tvseries:true, note:"A WandaVision sequel \u2014 Vision searches for identity and meets Ultron and JARVIS."}, "https://z2.idlixku.com/series/visionquest-2026"],
+    ["Avengers: Doomsday", "December 18, 2026", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"Multiple Avengers teams from different universes face Doctor Doom."}, "https://z2.idlixku.com/movie/avengers-doomsday-2026"],
+    ["Daredevil: Born Again (Season 3)", "March 2027", "Marvel Studios / Disney+", "daredevil", {tvseries:true, upcoming:true, note:"The third season of Born Again."}, "https://z2.idlixku.com/series/daredevil-born-again-season-3-2027"],
+    ["Spider-Man: Beyond the Spider-Verse", "2027 (tentative)", "Sony Pictures Animation", "spiderverse", {nonmcu:true, animation:true, upcoming:true, note:"The closing chapter of the animated Spider-Verse trilogy."}, "https://z2.idlixku.com/movie/spider-man-beyond-the-spider-verse-2027"],
+    ["Avengers: Secret Wars", "December 17, 2027", "Marvel Studios / Walt Disney Studios", "avengers", {upcoming:true, note:"The culmination of the Multiverse Saga, possibly resetting the MCU."}, "https://z2.idlixku.com/movie/avengers-secret-wars-2027"],
   ];
 
   const STORAGE_KEY = "marvel-checklist-state-v10";
@@ -593,7 +593,7 @@
     whatif: "What If...?", moonknight: "Moon Knight", msmarvel: "Ms. Marvel",
     shehulk: "She-Hulk", secretinvasion: "Secret Invasion", echo: "Echo",
     agatha: "Agatha All Along", daredevil: "Daredevil",
-    xmenfox: "X-Men (Fox / Animasi)", wolverine: "Wolverine", blade: "Blade",
+    xmenfox: "X-Men (Fox / Animated)", wolverine: "Wolverine", blade: "Blade",
     elektra: "Elektra", fantasticfourfox: "Fantastic Four (Fox)",
     ghostrider: "Ghost Rider", punisher: "The Punisher", deadpoolfox: "Deadpool (Fox)",
     venom: "Venom", morbius: "Morbius", kraven: "Kraven the Hunter",
@@ -601,7 +601,7 @@
     agentcarter: "Agent Carter", jessicajones: "Jessica Jones", lukecage: "Luke Cage",
     ironfist: "Iron Fist", defenders: "The Defenders", inhumans: "Inhumans",
     legion: "Legion", gifted: "The Gifted", runaways: "Runaways",
-    cloakdagger: "Cloak & Dagger", spiderverse: "Spider-Verse (Animasi)",
+    cloakdagger: "Cloak & Dagger", spiderverse: "Spider-Verse (Animated)",
     wonderman: "Wonder Man", ironheart: "Ironheart", zombies: "Marvel Zombies",
   };
 
@@ -650,7 +650,7 @@
     ringFg.style.strokeDashoffset = offset.toFixed(1);
     ringPct.textContent = pct + "%";
     countText.textContent = done + "/" + total;
-    doneToggleLabel.textContent = (doneOpen ? "Sembunyikan yang sudah ditonton (" : "Tampilkan yang sudah ditonton (") + done + ")";
+    doneToggleLabel.textContent = (doneOpen ? "Hide watched (" : "Show watched (") + done + ")";
   }
 
   const resultCountEl = document.getElementById("mc-result-count");
@@ -677,7 +677,7 @@
       el.classList.toggle("hidden", !show);
       if(show && el.dataset.done !== "1") visibleCount++;
     });
-    resultCountEl.textContent = visibleCount + " dari " + DATA.filter((_,i)=>!state[i]).length + " judul belum ditonton";
+    resultCountEl.textContent = visibleCount + " of " + DATA.filter((_,i)=>!state[i]).length + " unwatched titles";
     emptyEl.style.display = (visibleCount === 0 && !searchQuery && categoryFilter==="all" && heroFilter==="all") ? "none" : emptyEl.style.display;
     const anyVisible = document.querySelectorAll(".mc-item:not(.hidden)").length > 0;
     emptyEl.style.display = anyVisible ? "none" : "block";
@@ -730,10 +730,10 @@
           ${hasLink
             ? `<a class="mc-item-title mc-item-title-link" href="${link}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${title}</a>`
             : `<span class="mc-item-title">${title}</span>`}
-          ${f.nonmcu ? '<span class="mc-badge nonmcu">Non MCU</span>' : ""}
+          ${f.nonmcu ? '<span class="mc-badge nonmcu">Non-MCU</span>' : ""}
           ${f.tvseries ? '<span class="mc-badge tvseries">TV Series</span>' : ""}
-          ${f.animation ? '<span class="mc-badge animation">Animasi</span>' : ""}
-          ${f.upcoming ? '<span class="mc-badge upcoming">Belum rilis</span>' : ""}
+          ${f.animation ? '<span class="mc-badge animation">Animated</span>' : ""}
+          ${f.upcoming ? '<span class="mc-badge upcoming">Not yet released</span>' : ""}
         </div>
         <div class="mc-item-meta">${date} · ${studio}${f.rating != null ? " · ★ " + f.rating.toFixed(1) : ""}</div>
         ${f.note ? `<div class="mc-item-note">${f.note}</div>` : ""}
